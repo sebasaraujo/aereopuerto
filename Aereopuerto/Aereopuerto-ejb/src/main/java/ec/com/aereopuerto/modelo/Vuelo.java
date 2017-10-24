@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Vuelo.findByFechaActVu", query = "SELECT v FROM Vuelo v WHERE v.fechaActVu = :fechaActVu")})
 public class Vuelo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -63,11 +63,6 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaVu;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "hora_vu")
-    @Temporal(TemporalType.DATE)
-    private Date horaVu;
     @Basic(optional = false)
     @NotNull
     @Column(name = "duracion_vu")
@@ -86,10 +81,11 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_act_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaActVu;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vueloIdaRs")
-    private List<Reserva> reservaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vueloRetornoRs")
-    private List<Reserva> reservaList1;
+    @Column(name = "hora_vu")
+    private Double horaVu;
+    @JoinColumn(name = "aereopuerto_llegada", referencedColumnName = "codigo_ae")
+    @ManyToOne
+    private Aereopuerto aereopuertoLlegada;
     @JoinColumn(name = "aereolinea", referencedColumnName = "codigo_ar")
     @ManyToOne(optional = false)
     private Aereolinea aereolinea;
@@ -110,7 +106,7 @@ public class Vuelo implements Serializable {
         this.codigoVu = codigoVu;
     }
 
-    public Vuelo(Integer codigoVu, String numeroVu, Date fechaVu, Date horaVu, double duracionVu, String estadoVu, int usuarioActVu, Date fechaActVu) {
+    public Vuelo(Integer codigoVu, String numeroVu, Date fechaVu, double horaVu, double duracionVu, String estadoVu, int usuarioActVu, Date fechaActVu) {
         this.codigoVu = codigoVu;
         this.numeroVu = numeroVu;
         this.fechaVu = fechaVu;
@@ -145,14 +141,6 @@ public class Vuelo implements Serializable {
         this.fechaVu = fechaVu;
     }
 
-    public Date getHoraVu() {
-        return horaVu;
-    }
-
-    public void setHoraVu(Date horaVu) {
-        this.horaVu = horaVu;
-    }
-
     public double getDuracionVu() {
         return duracionVu;
     }
@@ -183,24 +171,6 @@ public class Vuelo implements Serializable {
 
     public void setFechaActVu(Date fechaActVu) {
         this.fechaActVu = fechaActVu;
-    }
-
-    @XmlTransient
-    public List<Reserva> getReservaList() {
-        return reservaList;
-    }
-
-    public void setReservaList(List<Reserva> reservaList) {
-        this.reservaList = reservaList;
-    }
-
-    @XmlTransient
-    public List<Reserva> getReservaList1() {
-        return reservaList1;
-    }
-
-    public void setReservaList1(List<Reserva> reservaList1) {
-        this.reservaList1 = reservaList1;
     }
 
     public Aereolinea getAereolinea() {
@@ -258,6 +228,22 @@ public class Vuelo implements Serializable {
     @Override
     public String toString() {
         return "ec.com.aereopuerto.modelo.Vuelo[ codigoVu=" + codigoVu + " ]";
+    }
+
+    public Double getHoraVu() {
+        return horaVu;
+    }
+
+    public void setHoraVu(Double horaVu) {
+        this.horaVu = horaVu;
+    }
+
+    public Aereopuerto getAereopuertoLlegada() {
+        return aereopuertoLlegada;
+    }
+
+    public void setAereopuertoLlegada(Aereopuerto aereopuertoLlegada) {
+        this.aereopuertoLlegada = aereopuertoLlegada;
     }
     
 }

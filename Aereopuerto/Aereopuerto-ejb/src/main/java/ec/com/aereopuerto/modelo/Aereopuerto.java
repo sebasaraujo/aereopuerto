@@ -44,6 +44,14 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Aereopuerto.findByFechaActAe", query = "SELECT a FROM Aereopuerto a WHERE a.fechaActAe = :fechaActAe")})
 public class Aereopuerto implements Serializable {
 
+    @Size(max = 500)
+    @Column(name = "nemonico_ae")
+    private String nemonicoAe;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aereopuertoLlegada")
+    private List<Producto> productoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aereopuertoSalida")
+    private List<Producto> productoList1;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -192,6 +200,32 @@ public class Aereopuerto implements Serializable {
     @Override
     public String toString() {
         return "ec.com.aereopuerto.modelo.Aereopuerto[ codigoAe=" + codigoAe + " ]";
+    }
+
+    public String getNemonicoAe() {
+        return nemonicoAe;
+    }
+
+    public void setNemonicoAe(String nemonicoAe) {
+        this.nemonicoAe = nemonicoAe;
+    }
+
+    @XmlTransient
+    public List<Producto> getProductoList() {
+        return productoList;
+    }
+
+    public void setProductoList(List<Producto> productoList) {
+        this.productoList = productoList;
+    }
+
+    @XmlTransient
+    public List<Producto> getProductoList1() {
+        return productoList1;
+    }
+
+    public void setProductoList1(List<Producto> productoList1) {
+        this.productoList1 = productoList1;
     }
     
 }

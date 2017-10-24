@@ -42,6 +42,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Aereolinea.findByFechaActAr", query = "SELECT a FROM Aereolinea a WHERE a.fechaActAr = :fechaActAr")})
 public class Aereolinea implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aereolinea")
+    private List<Producto> productoList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -157,6 +160,15 @@ public class Aereolinea implements Serializable {
     @Override
     public String toString() {
         return "ec.com.aereopuerto.modelo.Aereolinea[ codigoAr=" + codigoAr + " ]";
+    }
+
+    @XmlTransient
+    public List<Producto> getProductoList() {
+        return productoList;
+    }
+
+    public void setProductoList(List<Producto> productoList) {
+        this.productoList = productoList;
     }
     
 }

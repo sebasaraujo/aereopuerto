@@ -29,5 +29,11 @@ public interface TipoReservaFacadeLocal {
     List<TipoReserva> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que obtiene todos los tipos de reserva activos
+     * @return
+     */
+	List<TipoReserva> obtenerTiposReservasActivas();
     
 }

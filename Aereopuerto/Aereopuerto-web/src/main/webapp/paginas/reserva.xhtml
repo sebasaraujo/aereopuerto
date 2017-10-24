@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	template="/plantillas/contenedor.xhtml">
+
+	<ui:define name="titulo">
+        AEREOLINEA
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:wizard flowListener="#{reservaControlador.onFlowProcess}">
+				<p:tab id="reserva" title="Reserva">
+					<p:panel header="Busqueda">
+						<p:messages />
+						<h:panelGrid columns="2" >
+							<p:selectOneRadio id="console" >
+								<f:selectItems value="#{reservaControlador.tipoReservas}"
+									var="tr" itemLabel="#{tr.nombreTr}" itemValue="#{tr.codigoTr}" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="seleccion" title="Seleccion">
+					<p:panel header="Seleccion">
+						<p:messages />
+						<h:panelGrid columns="2" columnClasses="label, value">
+							<h:outputText value="Street: " />
+							<p:inputText />
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+		</h:form>
+	</ui:define>
+</ui:composition>

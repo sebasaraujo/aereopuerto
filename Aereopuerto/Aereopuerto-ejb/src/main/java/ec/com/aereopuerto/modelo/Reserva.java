@@ -46,6 +46,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Reserva.findByFechaActRs", query = "SELECT r FROM Reserva r WHERE r.fechaActRs = :fechaActRs")})
 public class Reserva implements Serializable {
 
+    @JoinColumn(name = "producto_ida_rs", referencedColumnName = "codigo_po")
+    @ManyToOne(optional = false)
+    private Producto productoIdaRs;
+    @JoinColumn(name = "producto_retorno_rs", referencedColumnName = "codigo_po")
+    @ManyToOne
+    private Producto productoRetornoRs;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,12 +96,6 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "hacia_rs", referencedColumnName = "codigo_ae")
     @ManyToOne(optional = false)
     private Aereopuerto haciaRs;
-    @JoinColumn(name = "vuelo_ida_rs", referencedColumnName = "codigo_vu")
-    @ManyToOne(optional = false)
-    private Vuelo vueloIdaRs;
-    @JoinColumn(name = "vuelo_retorno_rs", referencedColumnName = "codigo_vu")
-    @ManyToOne(optional = false)
-    private Vuelo vueloRetornoRs;
 
     public Reserva() {
     }
@@ -194,22 +195,6 @@ public class Reserva implements Serializable {
         this.haciaRs = haciaRs;
     }
 
-    public Vuelo getVueloIdaRs() {
-        return vueloIdaRs;
-    }
-
-    public void setVueloIdaRs(Vuelo vueloIdaRs) {
-        this.vueloIdaRs = vueloIdaRs;
-    }
-
-    public Vuelo getVueloRetornoRs() {
-        return vueloRetornoRs;
-    }
-
-    public void setVueloRetornoRs(Vuelo vueloRetornoRs) {
-        this.vueloRetornoRs = vueloRetornoRs;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -233,6 +218,22 @@ public class Reserva implements Serializable {
     @Override
     public String toString() {
         return "ec.com.aereopuerto.modelo.Reserva[ codigoRs=" + codigoRs + " ]";
+    }
+
+    public Producto getProductoIdaRs() {
+        return productoIdaRs;
+    }
+
+    public void setProductoIdaRs(Producto productoIdaRs) {
+        this.productoIdaRs = productoIdaRs;
+    }
+
+    public Producto getProductoRetornoRs() {
+        return productoRetornoRs;
+    }
+
+    public void setProductoRetornoRs(Producto productoRetornoRs) {
+        this.productoRetornoRs = productoRetornoRs;
     }
     
 }
