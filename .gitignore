@@ -1,2 +1,4 @@
 *.class
-*.class
+Aereopuerto/Aereopuerto-ear/target/
+Aereopuerto/Aereopuerto-ejb/target/
+Aereopuerto/Aereopuerto-web/target/
