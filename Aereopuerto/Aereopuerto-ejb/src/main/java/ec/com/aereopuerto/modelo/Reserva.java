@@ -96,6 +96,9 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "hacia_rs", referencedColumnName = "codigo_ae")
     @ManyToOne(optional = false)
     private Aereopuerto haciaRs;
+    @JoinColumn(name = "tipo_reserva", referencedColumnName = "codigo_tr")
+    @ManyToOne(optional = false)
+    private TipoReserva tipoReserva;
 
     public Reserva() {
     }
@@ -235,5 +238,13 @@ public class Reserva implements Serializable {
     public void setProductoRetornoRs(Producto productoRetornoRs) {
         this.productoRetornoRs = productoRetornoRs;
     }
+
+	public TipoReserva getTipoReserva() {
+		return tipoReserva;
+	}
+
+	public void setTipoReserva(TipoReserva tipoReserva) {
+		this.tipoReserva = tipoReserva;
+	}
     
 }

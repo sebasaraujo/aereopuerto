@@ -2,22 +2,26 @@ package ec.com.aereopuerto.controlador;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.primefaces.event.FlowEvent;
 
+import ec.com.aereopuerto.modelo.Aereopuerto;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.TipoReserva;
+import ec.com.aereopuerto.service.local.AereopuertoService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
 
-@Named(value="reservaControlador")
+@Named(value = "reservaControlador")
 @ViewScoped
-public class ReservaControlador extends BaseControlador implements Serializable{
+public class ReservaControlador extends BaseControlador implements Serializable {
 
 	/**
 	 * 
@@ -28,27 +32,86 @@ public class ReservaControlador extends BaseControlador implements Serializable{
 	private List<TipoReserva> tipoReservas = new ArrayList<>();
 	private Integer codigoTipoReserva;
 	private boolean skip;
-	
+	private Aereopuerto aereopuertoDesde;
+	private Date fechaSalida;
+	private Date fechaActual;
+	private Aereopuerto aereopuertoHacia;
+	private Date fechaRetorno;
+
 	@EJB
 	private TipoReservaService tipoReservaService;
-	
+	@EJB
+	private AereopuertoService aereopuertoService;
+
 	@PostConstruct
-	private void init()
-	{
+	private void init() {
 		reserva = new Reserva();
 		tipoReservas = tipoReservaService.obtenerTiposReservasActivas();
-		System.out.println("tipo de reservas: "+tipoReservas.size());
+		fechaActual = new Date();
+		fechaSalida = new Date();
+		System.out.println("tipo de reservas: " + tipoReservas.size());
 	}
 
 	public String onFlowProcess(FlowEvent event) {
-        if(skip) {
-            skip = false;   //reset in case user goes back
-            return "confirm";
-        }
-        else {
-            return event.getNewStep();
-        }
-    }
+		if (skip) {
+			skip = false; // reset in case user goes back
+			return "confirm";
+		} else {
+			return event.getNewStep();
+		}
+	}
+
+	public List<Aereopuerto> completeAereopuerto(String query) {
+		List<Aereopuerto> allAereopuertos = aereopuertoService.obtenerAereopuertosActivos();
+		List<Aereopuerto> filteredAereopuertos = new ArrayList<Aereopuerto>();
+
+		for (int i = 0; i < allAereopuertos.size(); i++) {
+			Aereopuerto aereopuerto = allAereopuertos.get(i);
+			if (aereopuerto.getNombreAe().toLowerCase().startsWith(query)) {
+				filteredAereopuertos.add(aereopuerto);
+			}
+		}
+
+		return filteredAereopuertos;
+	}
+	
+	public List<Aereopuerto> completeAereopuertoHacia(String query) {
+		List<Aereopuerto> allAereopuertos = new ArrayList<Aereopuerto>();
+		if(aereopuertoDesde != null && aereopuertoDesde.getCodigoAe() != null)
+		{
+			allAereopuertos = aereopuertoService.obtenerAereopuertosSinDestino(aereopuertoDesde.getCodigoAe());
+		}
+		else
+		{
+			allAereopuertos = aereopuertoService.obtenerAereopuertosActivos();
+		}
+		List<Aereopuerto> filteredAereopuertos = new ArrayList<Aereopuerto>();
+
+		for (int i = 0; i < allAereopuertos.size(); i++) {
+			Aereopuerto aereopuerto = allAereopuertos.get(i);
+			if (aereopuerto.getNombreAe().toLowerCase().startsWith(query)) {
+				filteredAereopuertos.add(aereopuerto);
+			}
+		}
+
+		return filteredAereopuertos;
+	}
+
+	public void tipoReservaChange(ValueChangeEvent changeEvent)
+	{
+		if(changeEvent.getNewValue() != null)
+		{
+			codigoTipoReserva = Integer.parseInt(changeEvent.getNewValue().toString());
+		}
+	}
+	
+	public void aereopuertoDesdeChange(ValueChangeEvent changeEvent)
+	{
+		if(changeEvent.getNewValue() != null)
+		{
+			aereopuertoDesde = (Aereopuerto)changeEvent.getNewValue();
+		}
+	}
 	
 	public Reserva getReserva() {
 		return reserva;
@@ -81,6 +144,45 @@ public class ReservaControlador extends BaseControlador implements Serializable{
 	public void setSkip(boolean skip) {
 		this.skip = skip;
 	}
-	
-	
+
+	public Aereopuerto getAereopuertoDesde() {
+		return aereopuertoDesde;
+	}
+
+	public void setAereopuertoDesde(Aereopuerto aereopuertoDesde) {
+		this.aereopuertoDesde = aereopuertoDesde;
+	}
+
+	public Date getFechaSalida() {
+		return fechaSalida;
+	}
+
+	public void setFechaSalida(Date fechaSalida) {
+		this.fechaSalida = fechaSalida;
+	}
+
+	public Date getFechaActual() {
+		return fechaActual;
+	}
+
+	public void setFechaActual(Date fechaActual) {
+		this.fechaActual = fechaActual;
+	}
+
+	public Aereopuerto getAereopuertoHacia() {
+		return aereopuertoHacia;
+	}
+
+	public void setAereopuertoHacia(Aereopuerto aereopuertoHacia) {
+		this.aereopuertoHacia = aereopuertoHacia;
+	}
+
+	public Date getFechaRetorno() {
+		return fechaRetorno;
+	}
+
+	public void setFechaRetorno(Date fechaRetorno) {
+		this.fechaRetorno = fechaRetorno;
+	}
+
 }

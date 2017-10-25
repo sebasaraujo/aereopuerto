@@ -9,16 +9,64 @@
         AEREOLINEA
     </ui:define>
 	<ui:define name="contenido">
-		<h:form>
-			<p:wizard flowListener="#{reservaControlador.onFlowProcess}">
+		<h:form id="formReserva">
+			<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>  
+			<p:wizard id="wizardId" 
+				flowListener="#{reservaControlador.onFlowProcess}"
+				nextLabel="Buscar">
 				<p:tab id="reserva" title="Reserva">
-					<p:panel header="Busqueda">
-						<p:messages />
-						<h:panelGrid columns="2" >
-							<p:selectOneRadio id="console" >
-								<f:selectItems value="#{reservaControlador.tipoReservas}"
+					<p:panel id="panelId" header="Busqueda">
+						<h:panelGrid columns="2" layout="grid">
+							<p:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo" 
+							valueChangeListener="#{reservaControlador.tipoReservaChange}">
+								<f:selectItems value="#{reservaControlador.tipoReservas}" 
 									var="tr" itemLabel="#{tr.nombreTr}" itemValue="#{tr.codigoTr}" />
 							</p:selectOneRadio>
+						</h:panelGrid>
+						<h:panelGrid columns="2" layout="grid">
+							<h:outputText value="Desde" />
+							<h:outputText value="Fecha de Salida" />
+							<p:autoComplete id="desdeId" placeholder="Desde" 
+								value="#{reservaControlador.aereopuertoDesde}"
+								completeMethod="#{reservaControlador.completeAereopuerto}"
+								var="aereopuerto" itemLabel="#{aereopuerto.nombreAe}"
+								itemValue="#{aereopuerto}" converter="aereopuertoConverter"
+								forceSelection="true">
+								<p:column>
+									<h:outputText value="#{aereopuerto.nombreAe}" />
+								</p:column>
+							</p:autoComplete>
+							<p:calendar id="fechaSalidaId"
+								value="#{reservaControlador.fechaSalida}"
+								mindate="#{reservaControlador.fechaActual}"
+								placeholder="Fecha de Salida">
+								<p:ajax event="change" update=":formReserva:wizardId"
+									process="fechaSalidaId" />
+							</p:calendar>
+						</h:panelGrid>
+						<h:panelGrid columns="2" layout="grid">
+							<h:outputText value="Hacia" />
+							<h:outputText value="Fecha de Retorno" />
+							<p:autoComplete id="haciaId" placeholder="Hacia"
+								value="#{reservaControlador.aereopuertoHacia}"
+								completeMethod="#{reservaControlador.completeAereopuertoHacia}"
+								var="aereopuerto" itemLabel="#{aereopuerto.nombreAe}"
+								itemValue="#{aereopuerto}" converter="aereopuertoConverter"
+								forceSelection="true">
+								<p:column>
+									<h:outputText value="#{aereopuerto.nombreAe}" />
+								</p:column>
+							</p:autoComplete>
+							<p:calendar id="fechaRetornoId"
+								value="#{reservaControlador.fechaRetorno}"
+								mindate="#{reservaControlador.fechaSalida}"
+								placeholder="Fecha de Retorno" />
+						</h:panelGrid>
+						<h:panelGrid columns="2" layout="grid" cellpadding="5">
+							<h:outputText value="Clase de cabina: " />
+							<p:selectOneMenu id="tipoCabinaId">
+								<f:selectItem itemLabel="Cabina Economica" itemValue="" />
+							</p:selectOneMenu>
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>

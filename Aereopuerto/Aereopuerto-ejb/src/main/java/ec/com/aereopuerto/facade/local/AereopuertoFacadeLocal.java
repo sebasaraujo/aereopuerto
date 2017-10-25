@@ -29,5 +29,18 @@ public interface AereopuertoFacadeLocal {
     List<Aereopuerto> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que obtiene todos los aereopuertos activos
+     * @return
+     */
+	List<Aereopuerto> obtenerAereopuertosActivos();
+
+	/**
+	 * Metodo que obtiene todos los aereopuertos excepto el destino selccionado
+	 * @param destino
+	 * @return
+	 */
+	List<Aereopuerto> obtenerAereopuertosSinDestino(Integer destino);
     
 }
