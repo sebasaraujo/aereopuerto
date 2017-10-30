@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luisp.araujo
+ * @author sebastian
  */
 @Entity
 @Table(name = "producto")
@@ -86,6 +86,10 @@ public class Producto implements Serializable {
     @JoinColumn(name = "tipo_producto", referencedColumnName = "codigo_tpr")
     @ManyToOne(optional = false)
     private TipoProducto tipoProducto;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    private List<TarifaProducto> tarifaProductoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    private List<ProductoVuelo> productoVueloList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productoIdaRs")
     private List<Reserva> reservaList;
     @OneToMany(mappedBy = "productoRetornoRs")
@@ -188,6 +192,24 @@ public class Producto implements Serializable {
     }
 
     @XmlTransient
+    public List<TarifaProducto> getTarifaProductoList() {
+        return tarifaProductoList;
+    }
+
+    public void setTarifaProductoList(List<TarifaProducto> tarifaProductoList) {
+        this.tarifaProductoList = tarifaProductoList;
+    }
+
+    @XmlTransient
+    public List<ProductoVuelo> getProductoVueloList() {
+        return productoVueloList;
+    }
+
+    public void setProductoVueloList(List<ProductoVuelo> productoVueloList) {
+        this.productoVueloList = productoVueloList;
+    }
+
+    @XmlTransient
     public List<Reserva> getReservaList() {
         return reservaList;
     }
@@ -227,7 +249,7 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "ec.com.aereopuerto.modelo.Producto[ codigoPo=" + codigoPo + " ]";
+        return "entidades.Producto[ codigoPo=" + codigoPo + " ]";
     }
     
 }

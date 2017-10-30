@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -19,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author luisp.araujo
+ * @author sebastian
  */
 @Entity
 @Table(name = "producto_vuelo")
@@ -35,6 +37,12 @@ public class ProductoVuelo implements Serializable {
     @Basic(optional = false)
     @Column(name = "codigo_pv")
     private Integer codigoPv;
+    @JoinColumn(name = "producto", referencedColumnName = "codigo_po")
+    @ManyToOne(optional = false)
+    private Producto producto;
+    @JoinColumn(name = "vuelo", referencedColumnName = "codigo_vu")
+    @ManyToOne(optional = false)
+    private Vuelo vuelo;
 
     public ProductoVuelo() {
     }
@@ -49,6 +57,22 @@ public class ProductoVuelo implements Serializable {
 
     public void setCodigoPv(Integer codigoPv) {
         this.codigoPv = codigoPv;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Vuelo getVuelo() {
+        return vuelo;
+    }
+
+    public void setVuelo(Vuelo vuelo) {
+        this.vuelo = vuelo;
     }
 
     @Override
@@ -73,7 +97,7 @@ public class ProductoVuelo implements Serializable {
 
     @Override
     public String toString() {
-        return "ec.com.aereopuerto.modelo.ProductoVuelo[ codigoPv=" + codigoPv + " ]";
+        return "entidades.ProductoVuelo[ codigoPv=" + codigoPv + " ]";
     }
     
 }

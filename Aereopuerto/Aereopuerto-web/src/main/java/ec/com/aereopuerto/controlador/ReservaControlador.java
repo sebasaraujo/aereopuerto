@@ -11,12 +11,14 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.primefaces.event.FlowEvent;
+import org.primefaces.event.SelectEvent;
 
 import ec.com.aereopuerto.modelo.Aereopuerto;
+import ec.com.aereopuerto.modelo.Producto;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.TipoReserva;
 import ec.com.aereopuerto.service.local.AereopuertoService;
+import ec.com.aereopuerto.service.local.ProductoService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
 
 @Named(value = "reservaControlador")
@@ -42,6 +44,8 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private TipoReservaService tipoReservaService;
 	@EJB
 	private AereopuertoService aereopuertoService;
+	@EJB
+	private ProductoService productoService;
 
 	@PostConstruct
 	private void init() {
@@ -49,17 +53,9 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		tipoReservas = tipoReservaService.obtenerTiposReservasActivas();
 		fechaActual = new Date();
 		fechaSalida = new Date();
-		System.out.println("tipo de reservas: " + tipoReservas.size());
+		codigoTipoReserva = 1;
 	}
 
-	public String onFlowProcess(FlowEvent event) {
-		if (skip) {
-			skip = false; // reset in case user goes back
-			return "confirm";
-		} else {
-			return event.getNewStep();
-		}
-	}
 
 	public List<Aereopuerto> completeAereopuerto(String query) {
 		List<Aereopuerto> allAereopuertos = aereopuertoService.obtenerAereopuertosActivos();
@@ -67,7 +63,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 		for (int i = 0; i < allAereopuertos.size(); i++) {
 			Aereopuerto aereopuerto = allAereopuertos.get(i);
-			if (aereopuerto.getNombreAe().toLowerCase().startsWith(query)) {
+			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query)) {
 				filteredAereopuertos.add(aereopuerto);
 			}
 		}
@@ -89,7 +85,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 		for (int i = 0; i < allAereopuertos.size(); i++) {
 			Aereopuerto aereopuerto = allAereopuertos.get(i);
-			if (aereopuerto.getNombreAe().toLowerCase().startsWith(query)) {
+			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query)) {
 				filteredAereopuertos.add(aereopuerto);
 			}
 		}
@@ -105,11 +101,37 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		}
 	}
 	
-	public void aereopuertoDesdeChange(ValueChangeEvent changeEvent)
+	public void aereopuertoDesdeChange(SelectEvent changeEvent)
 	{
-		if(changeEvent.getNewValue() != null)
+		if(changeEvent.getObject() != null)
 		{
-			aereopuertoDesde = (Aereopuerto)changeEvent.getNewValue();
+			aereopuertoDesde = (Aereopuerto)changeEvent.getObject();
+		}
+	}
+	
+	public void aereopuertoHaciaChange(SelectEvent changeEvent)
+	{
+		if(changeEvent.getObject() != null)
+		{
+			aereopuertoHacia = (Aereopuerto)changeEvent.getObject();
+		}
+	}
+	
+	public void onDateSelect(SelectEvent event) {
+		fechaSalida = (Date) event.getObject();
+		fechaRetorno = null;
+	}
+	
+	public void onDateSelectFechaRetorno(SelectEvent event) {
+		fechaRetorno = (Date) event.getObject();
+	}
+	
+	public void buscar ()
+	{
+		List<Producto> listaProductos = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida);
+		for(Producto p : listaProductos)
+		{
+			System.out.println("producto: "+p.getCodigoPo());
 		}
 	}
 	

@@ -10,17 +10,16 @@
     </ui:define>
 	<ui:define name="contenido">
 		<h:form id="formReserva">
-			<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>  
-			<p:wizard id="wizardId" 
-				flowListener="#{reservaControlador.onFlowProcess}"
-				nextLabel="Buscar">
-				<p:tab id="reserva" title="Reserva">
+			<p:growl id="growl" showDetail="true" autoUpdate="true"/>  
+			<p:tabView id="tabViewId" dynamic="true" cache="true">
+				<p:tab id="reservaId" title="Reserva">
 					<p:panel id="panelId" header="Busqueda">
 						<h:panelGrid columns="2" layout="grid">
-							<p:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo" 
+							<p:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo de reserva" 
 							valueChangeListener="#{reservaControlador.tipoReservaChange}">
 								<f:selectItems value="#{reservaControlador.tipoReservas}" 
 									var="tr" itemLabel="#{tr.nombreTr}" itemValue="#{tr.codigoTr}" />
+									<f:ajax />
 							</p:selectOneRadio>
 						</h:panelGrid>
 						<h:panelGrid columns="2" layout="grid">
@@ -31,17 +30,18 @@
 								completeMethod="#{reservaControlador.completeAereopuerto}"
 								var="aereopuerto" itemLabel="#{aereopuerto.nombreAe}"
 								itemValue="#{aereopuerto}" converter="aereopuertoConverter"
+								required="true" requiredMessage="Favor eliga su origen de partida"
 								forceSelection="true">
+								<p:ajax event="itemSelect" listener="#{reservaControlador.aereopuertoDesdeChange}"/> 
 								<p:column>
-									<h:outputText value="#{aereopuerto.nombreAe}" />
+									<h:outputText value="#{aereopuerto.nemonicoAe} - #{aereopuerto.nombreAe}" />
 								</p:column>
 							</p:autoComplete>
 							<p:calendar id="fechaSalidaId"
 								value="#{reservaControlador.fechaSalida}"
 								mindate="#{reservaControlador.fechaActual}"
-								placeholder="Fecha de Salida">
-								<p:ajax event="change" update=":formReserva:wizardId"
-									process="fechaSalidaId" />
+								placeholder="Fecha de Salida" >
+								<p:ajax event="dateSelect" listener="#{reservaControlador.onDateSelect}" update=":formReserva:tabViewId:fechaRetornoId"/>
 							</p:calendar>
 						</h:panelGrid>
 						<h:panelGrid columns="2" layout="grid">
@@ -52,21 +52,31 @@
 								completeMethod="#{reservaControlador.completeAereopuertoHacia}"
 								var="aereopuerto" itemLabel="#{aereopuerto.nombreAe}"
 								itemValue="#{aereopuerto}" converter="aereopuertoConverter"
+								required="#{reservaControlador.codigoTipoReserva == 1}"
+								requiredMessage="Favor escoga un destino"
 								forceSelection="true">
+								<p:ajax event="itemSelect" listener="#{reservaControlador.aereopuertoHaciaChange}"/> 
 								<p:column>
-									<h:outputText value="#{aereopuerto.nombreAe}" />
+									<h:outputText value="#{aereopuerto.nemonicoAe} - #{aereopuerto.nombreAe}" />
 								</p:column>
 							</p:autoComplete>
 							<p:calendar id="fechaRetornoId"
 								value="#{reservaControlador.fechaRetorno}"
 								mindate="#{reservaControlador.fechaSalida}"
-								placeholder="Fecha de Retorno" />
+								required="#{reservaControlador.codigoTipoReserva == 1}"
+								requiredMessage="Favor escoga una fecha de regreso"
+								placeholder="Fecha de Retorno" >
+								<p:ajax event="dateSelect" listener="#{reservaControlador.onDateSelectFechaRetorno}"/>
+								</p:calendar>
 						</h:panelGrid>
 						<h:panelGrid columns="2" layout="grid" cellpadding="5">
 							<h:outputText value="Clase de cabina: " />
-							<p:selectOneMenu id="tipoCabinaId">
+							<h:selectOneMenu id="tipoCabinaId">
 								<f:selectItem itemLabel="Cabina Economica" itemValue="" />
-							</p:selectOneMenu>
+							</h:selectOneMenu>
+						</h:panelGrid>
+						<h:panelGrid>
+							<p:commandButton value="Buscar" action="#{reservaControlador.buscar()}"></p:commandButton>
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>
@@ -80,7 +90,7 @@
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>
-			</p:wizard>
+			</p:tabView>
 		</h:form>
 	</ui:define>
 </ui:composition>

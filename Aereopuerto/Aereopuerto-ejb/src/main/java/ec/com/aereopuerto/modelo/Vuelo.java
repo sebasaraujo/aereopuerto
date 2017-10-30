@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author luisp.araujo
+ * @author sebastian
  */
 @Entity
 @Table(name = "vuelo")
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Vuelo.findByFechaActVu", query = "SELECT v FROM Vuelo v WHERE v.fechaActVu = :fechaActVu")})
 public class Vuelo implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -63,6 +63,9 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaVu;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "hora_vu")
+    private Double horaVu;
     @Basic(optional = false)
     @NotNull
     @Column(name = "duracion_vu")
@@ -81,17 +84,19 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_act_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaActVu;
-    @Column(name = "hora_vu")
-    private Double horaVu;
-    @JoinColumn(name = "aereopuerto_llegada", referencedColumnName = "codigo_ae")
-    @ManyToOne
-    private Aereopuerto aereopuertoLlegada;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vuelo")
+    private List<ProductoVuelo> productoVueloList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vuelo")
+    private List<CabinaVuelo> cabinaVueloList;
     @JoinColumn(name = "aereolinea", referencedColumnName = "codigo_ar")
     @ManyToOne(optional = false)
     private Aereolinea aereolinea;
     @JoinColumn(name = "aereopuerto", referencedColumnName = "codigo_ae")
     @ManyToOne(optional = false)
     private Aereopuerto aereopuerto;
+    @JoinColumn(name = "aereopuerto_llegada", referencedColumnName = "codigo_ae")
+    @ManyToOne
+    private Aereopuerto aereopuertoLlegada;
     @JoinColumn(name = "tipo_estado", referencedColumnName = "codigo_te")
     @ManyToOne(optional = false)
     private TipoEstado tipoEstado;
@@ -106,11 +111,10 @@ public class Vuelo implements Serializable {
         this.codigoVu = codigoVu;
     }
 
-    public Vuelo(Integer codigoVu, String numeroVu, Date fechaVu, double horaVu, double duracionVu, String estadoVu, int usuarioActVu, Date fechaActVu) {
+    public Vuelo(Integer codigoVu, String numeroVu, Date fechaVu, double duracionVu, String estadoVu, int usuarioActVu, Date fechaActVu) {
         this.codigoVu = codigoVu;
         this.numeroVu = numeroVu;
         this.fechaVu = fechaVu;
-        this.horaVu = horaVu;
         this.duracionVu = duracionVu;
         this.estadoVu = estadoVu;
         this.usuarioActVu = usuarioActVu;
@@ -139,6 +143,14 @@ public class Vuelo implements Serializable {
 
     public void setFechaVu(Date fechaVu) {
         this.fechaVu = fechaVu;
+    }
+
+    public Double getHoraVu() {
+        return horaVu;
+    }
+
+    public void setHoraVu(Double horaVu) {
+        this.horaVu = horaVu;
     }
 
     public double getDuracionVu() {
@@ -173,6 +185,24 @@ public class Vuelo implements Serializable {
         this.fechaActVu = fechaActVu;
     }
 
+    @XmlTransient
+    public List<ProductoVuelo> getProductoVueloList() {
+        return productoVueloList;
+    }
+
+    public void setProductoVueloList(List<ProductoVuelo> productoVueloList) {
+        this.productoVueloList = productoVueloList;
+    }
+
+    @XmlTransient
+    public List<CabinaVuelo> getCabinaVueloList() {
+        return cabinaVueloList;
+    }
+
+    public void setCabinaVueloList(List<CabinaVuelo> cabinaVueloList) {
+        this.cabinaVueloList = cabinaVueloList;
+    }
+
     public Aereolinea getAereolinea() {
         return aereolinea;
     }
@@ -187,6 +217,14 @@ public class Vuelo implements Serializable {
 
     public void setAereopuerto(Aereopuerto aereopuerto) {
         this.aereopuerto = aereopuerto;
+    }
+
+    public Aereopuerto getAereopuertoLlegada() {
+        return aereopuertoLlegada;
+    }
+
+    public void setAereopuertoLlegada(Aereopuerto aereopuertoLlegada) {
+        this.aereopuertoLlegada = aereopuertoLlegada;
     }
 
     public TipoEstado getTipoEstado() {
@@ -227,23 +265,7 @@ public class Vuelo implements Serializable {
 
     @Override
     public String toString() {
-        return "ec.com.aereopuerto.modelo.Vuelo[ codigoVu=" + codigoVu + " ]";
-    }
-
-    public Double getHoraVu() {
-        return horaVu;
-    }
-
-    public void setHoraVu(Double horaVu) {
-        this.horaVu = horaVu;
-    }
-
-    public Aereopuerto getAereopuertoLlegada() {
-        return aereopuertoLlegada;
-    }
-
-    public void setAereopuertoLlegada(Aereopuerto aereopuertoLlegada) {
-        this.aereopuertoLlegada = aereopuertoLlegada;
+        return "entidades.Vuelo[ codigoVu=" + codigoVu + " ]";
     }
     
 }
