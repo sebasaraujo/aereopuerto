@@ -11,14 +11,13 @@
 	<ui:define name="contenido">
 		<h:form id="formReserva">
 			<p:growl id="growl" showDetail="true" autoUpdate="true"/>  
-			<p:tabView id="tabViewId" dynamic="true" cache="true">
-				<p:tab id="reservaId" title="Reserva">
+			<p:tabView id="tabViewId" dynamic="true" cache="true" activeIndex="#{reservaControlador.index}">
+				<p:tab id="reservaId" title="Reserva" disabled="#{!reservaControlador.tabReserva}">
 					<p:panel id="panelId" header="Busqueda">
 						<h:panelGrid columns="2" layout="grid">
 							<p:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo de reserva" 
 							valueChangeListener="#{reservaControlador.tipoReservaChange}">
-								<f:selectItems value="#{reservaControlador.tipoReservas}" 
-									var="tr" itemLabel="#{tr.nombreTr}" itemValue="#{tr.codigoTr}" />
+								<f:selectItems value="#{reservaControlador.tipoReservaItem}" />
 									<f:ajax />
 							</p:selectOneRadio>
 						</h:panelGrid>
@@ -52,7 +51,7 @@
 								completeMethod="#{reservaControlador.completeAereopuertoHacia}"
 								var="aereopuerto" itemLabel="#{aereopuerto.nombreAe}"
 								itemValue="#{aereopuerto}" converter="aereopuertoConverter"
-								required="#{reservaControlador.codigoTipoReserva == 1}"
+								required="true"
 								requiredMessage="Favor escoga un destino"
 								forceSelection="true">
 								<p:ajax event="itemSelect" listener="#{reservaControlador.aereopuertoHaciaChange}"/> 
@@ -76,18 +75,44 @@
 							</h:selectOneMenu>
 						</h:panelGrid>
 						<h:panelGrid>
-							<p:commandButton value="Buscar" action="#{reservaControlador.buscar()}"></p:commandButton>
+							<p:commandButton value="Buscar" action="#{reservaControlador.buscar()}" process=":formReserva:tabViewId:reservaId" update=":formReserva:tabViewId"></p:commandButton>
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>
 
-				<p:tab id="seleccion" title="Seleccion">
-					<p:panel header="Seleccion">
-						<p:messages />
-						<h:panelGrid columns="2" columnClasses="label, value">
-							<h:outputText value="Street: " />
-							<p:inputText />
-						</h:panelGrid>
+				<p:tab id="seleccionId" title="Seleccion" disabled="#{!reservaControlador.tabSeleccion}">
+					<p:panel header="Selecciona tu ida" id="vuelosIdaId">
+						<p:dataTable value="#{reservaControlador.listaProductosIda}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+							<p:column width="20%">
+								<p:commandLink value="Desde: $#{producto.precioPo}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
+								update=":formReserva:tabViewId:seleccionId"/>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel header="Selecciona tu regreso" id="vuelosRegresoId" rendered="#{reservaControlador.mostrarVuelosRegreso}">
+						<p:dataTable value="#{reservaControlador.listaProductosRegreso}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+							<p:column width="20%">
+								<p:commandLink value="Desde: $#{producto.precioPo}"/>
+							</p:column>
+						</p:dataTable>
 					</p:panel>
 				</p:tab>
 			</p:tabView>

@@ -65,6 +65,9 @@ public class Producto implements Serializable {
     @Size(min = 1, max = 1)
     @Column(name = "estado_po")
     private String estadoPo;
+    @Column(name = "fecha_po")
+    @Temporal(TemporalType.DATE)
+    private Date fechaPo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "usuario_act_po")
@@ -227,7 +230,15 @@ public class Producto implements Serializable {
         this.reservaList1 = reservaList1;
     }
 
-    @Override
+    public Date getFechaPo() {
+		return fechaPo;
+	}
+
+	public void setFechaPo(Date fechaPo) {
+		this.fechaPo = fechaPo;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (codigoPo != null ? codigoPo.hashCode() : 0);

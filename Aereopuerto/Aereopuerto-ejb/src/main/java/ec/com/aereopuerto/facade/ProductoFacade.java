@@ -39,8 +39,8 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
 	@Override
     public List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha)
     {
-    	Query q = em.createQuery("Select p from Producto p left join fetch p.productoVueloList pv left join fetch pv.vuelo v where p.aereopuertoLlegada.codigoAe = :codigoAereopuertoLlegada and p.aereopuertoSalida.codigoAe = :codigoAereopuertoSalida"
-    			+ " and pv.vuelo.fechaVu = :fecha");
+    	Query q = em.createQuery("Select distinct p from Producto p left join fetch p.productoVueloList pv left join fetch pv.vuelo v where p.aereopuertoLlegada.codigoAe = :codigoAereopuertoLlegada and p.aereopuertoSalida.codigoAe = :codigoAereopuertoSalida"
+    			+ " and p.fechaPo = :fecha");
     	q.setParameter("codigoAereopuertoLlegada", codigoAereopuertoLlegada);
     	q.setParameter("codigoAereopuertoSalida", codigoAereopuertoSalida);
     	q.setParameter("fecha", fecha);

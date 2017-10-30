@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -20,6 +21,7 @@ import ec.com.aereopuerto.modelo.TipoReserva;
 import ec.com.aereopuerto.service.local.AereopuertoService;
 import ec.com.aereopuerto.service.local.ProductoService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
+import ec.com.aereopuerto.util.Constantes;
 
 @Named(value = "reservaControlador")
 @ViewScoped
@@ -39,6 +41,13 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private Date fechaActual;
 	private Aereopuerto aereopuertoHacia;
 	private Date fechaRetorno;
+	private List<SelectItem> tipoReservaItem = new ArrayList<>();
+	private boolean tabReserva = false;
+	private boolean tabSeleccion = false;
+	private Integer index = 0;
+	private List<Producto> listaProductosIda = new ArrayList<>();
+	private List<Producto> listaProductosRegreso = new ArrayList<>();
+	private boolean mostrarVuelosRegreso = false;
 
 	@EJB
 	private TipoReservaService tipoReservaService;
@@ -51,9 +60,16 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private void init() {
 		reserva = new Reserva();
 		tipoReservas = tipoReservaService.obtenerTiposReservasActivas();
+		for(TipoReserva tr : tipoReservas)
+		{
+			SelectItem tipoReserva = new SelectItem(tr.getCodigoTr(), tr.getNombreTr());
+			tipoReservaItem.add(tipoReserva);
+		}
 		fechaActual = new Date();
 		fechaSalida = new Date();
 		codigoTipoReserva = 1;
+		tabReserva = true;
+		index = 0;
 	}
 
 
@@ -128,10 +144,20 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void buscar ()
 	{
-		List<Producto> listaProductos = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida);
-		for(Producto p : listaProductos)
+		listaProductosIda = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida);
+		listaProductosRegreso = productoService.obtenerProductosBusqueda(aereopuertoHacia.getCodigoAe(), aereopuertoDesde.getCodigoAe(), fechaRetorno);
+		tabSeleccion = true;
+		tabReserva = false;
+		index = 1;
+	}
+	
+	public void seleccionVueloIda(Integer codigoProducto)
+	{
+		System.out.println("codigo Tipo Reserva: "+codigoTipoReserva);
+		System.out.println("Producto seleccionado: "+codigoProducto);
+		if(codigoTipoReserva.equals(Constantes.TIPO_RESERVA_IDA_VUELTA))
 		{
-			System.out.println("producto: "+p.getCodigoPo());
+			mostrarVuelosRegreso = true;
 		}
 	}
 	
@@ -205,6 +231,76 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setFechaRetorno(Date fechaRetorno) {
 		this.fechaRetorno = fechaRetorno;
+	}
+
+
+	public List<SelectItem> getTipoReservaItem() {
+		return tipoReservaItem;
+	}
+
+
+	public void setTipoReservaItem(List<SelectItem> tipoReservaItem) {
+		this.tipoReservaItem = tipoReservaItem;
+	}
+
+
+	public boolean isTabReserva() {
+		return tabReserva;
+	}
+
+
+	public void setTabReserva(boolean tabReserva) {
+		this.tabReserva = tabReserva;
+	}
+
+
+	public boolean isTabSeleccion() {
+		return tabSeleccion;
+	}
+
+
+	public void setTabSeleccion(boolean tabSeleccion) {
+		this.tabSeleccion = tabSeleccion;
+	}
+
+
+	public Integer getIndex() {
+		return index;
+	}
+
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
+
+	public List<Producto> getListaProductosIda() {
+		return listaProductosIda;
+	}
+
+
+	public void setListaProductosIda(List<Producto> listaProductosIda) {
+		this.listaProductosIda = listaProductosIda;
+	}
+
+
+	public List<Producto> getListaProductosRegreso() {
+		return listaProductosRegreso;
+	}
+
+
+	public void setListaProductosRegreso(List<Producto> listaProductosRegreso) {
+		this.listaProductosRegreso = listaProductosRegreso;
+	}
+
+
+	public boolean isMostrarVuelosRegreso() {
+		return mostrarVuelosRegreso;
+	}
+
+
+	public void setMostrarVuelosRegreso(boolean mostrarVuelosRegreso) {
+		this.mostrarVuelosRegreso = mostrarVuelosRegreso;
 	}
 
 }

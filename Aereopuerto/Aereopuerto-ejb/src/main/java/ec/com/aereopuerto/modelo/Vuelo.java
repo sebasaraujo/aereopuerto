@@ -8,6 +8,7 @@ package ec.com.aereopuerto.modelo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Vuelo.findByCodigoVu", query = "SELECT v FROM Vuelo v WHERE v.codigoVu = :codigoVu")
     , @NamedQuery(name = "Vuelo.findByNumeroVu", query = "SELECT v FROM Vuelo v WHERE v.numeroVu = :numeroVu")
     , @NamedQuery(name = "Vuelo.findByFechaVu", query = "SELECT v FROM Vuelo v WHERE v.fechaVu = :fechaVu")
-    , @NamedQuery(name = "Vuelo.findByHoraVu", query = "SELECT v FROM Vuelo v WHERE v.horaVu = :horaVu")
     , @NamedQuery(name = "Vuelo.findByDuracionVu", query = "SELECT v FROM Vuelo v WHERE v.duracionVu = :duracionVu")
     , @NamedQuery(name = "Vuelo.findByEstadoVu", query = "SELECT v FROM Vuelo v WHERE v.estadoVu = :estadoVu")
     , @NamedQuery(name = "Vuelo.findByUsuarioActVu", query = "SELECT v FROM Vuelo v WHERE v.usuarioActVu = :usuarioActVu")
@@ -63,9 +63,6 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaVu;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "hora_vu")
-    private Double horaVu;
     @Basic(optional = false)
     @NotNull
     @Column(name = "duracion_vu")
@@ -84,6 +81,12 @@ public class Vuelo implements Serializable {
     @Column(name = "fecha_act_vu")
     @Temporal(TemporalType.DATE)
     private Date fechaActVu;
+    @Column(name = "hora_salida_vu")
+    @Temporal(TemporalType.TIME)
+    private Date horaSalidaVu;
+    @Column(name = "hora_llegada_vu")
+    @Temporal(TemporalType.TIME)
+    private Date horaLlegadaVu;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vuelo")
     private List<ProductoVuelo> productoVueloList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vuelo")
@@ -143,14 +146,6 @@ public class Vuelo implements Serializable {
 
     public void setFechaVu(Date fechaVu) {
         this.fechaVu = fechaVu;
-    }
-
-    public Double getHoraVu() {
-        return horaVu;
-    }
-
-    public void setHoraVu(Double horaVu) {
-        this.horaVu = horaVu;
     }
 
     public double getDuracionVu() {
@@ -243,7 +238,23 @@ public class Vuelo implements Serializable {
         this.tipoVuelo = tipoVuelo;
     }
 
-    @Override
+    public Date getHoraSalidaVu() {
+		return horaSalidaVu;
+	}
+
+	public void setHoraSalidaVu(Date horaSalidaVu) {
+		this.horaSalidaVu = horaSalidaVu;
+	}
+
+	public Date getHoraLlegadaVu() {
+		return horaLlegadaVu;
+	}
+
+	public void setHoraLlegadaVu(Date horaLlegadaVu) {
+		this.horaLlegadaVu = horaLlegadaVu;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (codigoVu != null ? codigoVu.hashCode() : 0);
