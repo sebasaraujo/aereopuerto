@@ -29,5 +29,11 @@ public interface TipoCabinaFacadeLocal {
     List<TipoCabina> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que otbeien todos los tipos de cabina activos
+     * @return
+     */
+	List<TipoCabina> obtenerTipoCabinasActivo();
     
 }

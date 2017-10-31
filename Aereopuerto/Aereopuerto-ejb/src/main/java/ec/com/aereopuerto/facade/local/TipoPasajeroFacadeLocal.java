@@ -29,5 +29,11 @@ public interface TipoPasajeroFacadeLocal {
     List<TipoPasajero> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que obtiene todos los tipos de pasajeros activos
+     * @return
+     */
+	List<TipoPasajero> obtenerTipoPasajeros();
     
 }

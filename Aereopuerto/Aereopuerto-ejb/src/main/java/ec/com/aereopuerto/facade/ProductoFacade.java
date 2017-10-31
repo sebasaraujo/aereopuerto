@@ -37,13 +37,15 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
     
     @SuppressWarnings("unchecked")
 	@Override
-    public List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha)
+    public List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha, Integer tipoCabina)
     {
-    	Query q = em.createQuery("Select distinct p from Producto p left join fetch p.productoVueloList pv left join fetch pv.vuelo v where p.aereopuertoLlegada.codigoAe = :codigoAereopuertoLlegada and p.aereopuertoSalida.codigoAe = :codigoAereopuertoSalida"
-    			+ " and p.fechaPo = :fecha");
+    	Query q = em.createQuery("Select distinct p from Producto p left join fetch p.productoVueloList pv left join fetch pv.vuelo v, TarifaProducto tp "
+    			+ "where tp.producto.codigoPo = p.codigoPo and p.aereopuertoLlegada.codigoAe = :codigoAereopuertoLlegada and p.aereopuertoSalida.codigoAe = :codigoAereopuertoSalida"
+    			+ " and p.fechaPo = :fecha and tp.tipoCabina.codigoTc = :tipoCabina");
     	q.setParameter("codigoAereopuertoLlegada", codigoAereopuertoLlegada);
     	q.setParameter("codigoAereopuertoSalida", codigoAereopuertoSalida);
     	q.setParameter("fecha", fecha);
+    	q.setParameter("tipoCabina", tipoCabina);
     	return q.getResultList();
     }
     

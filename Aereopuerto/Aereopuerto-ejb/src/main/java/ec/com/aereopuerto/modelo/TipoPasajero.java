@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -70,6 +71,9 @@ public class TipoPasajero implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoPasajero")
     private List<Pasajero> pasajeroList;
 
+    @Transient
+    Integer numeroPasajeros = 0;
+    
     public TipoPasajero() {
     }
 
@@ -134,7 +138,15 @@ public class TipoPasajero implements Serializable {
         this.pasajeroList = pasajeroList;
     }
 
-    @Override
+    public Integer getNumeroPasajeros() {
+		return numeroPasajeros;
+	}
+
+	public void setNumeroPasajeros(Integer numeroPasajeros) {
+		this.numeroPasajeros = numeroPasajeros;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (codigoTp != null ? codigoTp.hashCode() : 0);

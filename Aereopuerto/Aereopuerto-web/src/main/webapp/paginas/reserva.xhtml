@@ -15,11 +15,11 @@
 				<p:tab id="reservaId" title="Reserva" disabled="#{!reservaControlador.tabReserva}">
 					<p:panel id="panelId" header="Busqueda">
 						<h:panelGrid columns="2" layout="grid">
-							<p:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo de reserva" 
+							<h:selectOneRadio id="console" required="true" requiredMessage="Favor eliga un tipo de reserva" 
 							valueChangeListener="#{reservaControlador.tipoReservaChange}">
 								<f:selectItems value="#{reservaControlador.tipoReservaItem}" />
 									<f:ajax />
-							</p:selectOneRadio>
+							</h:selectOneRadio>
 						</h:panelGrid>
 						<h:panelGrid columns="2" layout="grid">
 							<h:outputText value="Desde" />
@@ -68,16 +68,31 @@
 								<p:ajax event="dateSelect" listener="#{reservaControlador.onDateSelectFechaRetorno}"/>
 								</p:calendar>
 						</h:panelGrid>
-						<h:panelGrid columns="2" layout="grid" cellpadding="5">
+						</p:panel>
+						<p:panel header="Pasajeros">
+							<h:panelGrid columns="1" layout="grid" cellpadding="5">
+						<p:repeat value="#{reservaControlador.tipoPasajeros}" var="tipoPasasjero">
+							<h:outputText value="#{tipoPasasjero.nombreTp}" />
+							<h:outputText value="&#160;&#160;&#160;" />
+							<p:spinner value="#{tipoPasasjero.numeroPasajeros}" min="0" />
+							<h:outputText value="&#160;&#160;&#160;" /> 
+						</p:repeat>
+						</h:panelGrid>
+						</p:panel>
+						<p:panel header="Tipo Cabina">
+							<h:panelGrid columns="2" layout="grid" cellpadding="5">
 							<h:outputText value="Clase de cabina: " />
-							<h:selectOneMenu id="tipoCabinaId">
-								<f:selectItem itemLabel="Cabina Economica" itemValue="" />
+							<h:selectOneMenu id="tipoCabinaId" value="#{reservaControlador.codigoTipoCabina}">
+								<f:selectItems value="#{reservaControlador.tipoCabinas}" var="tipoCabina" itemLabel="#{tipoCabina.nombreTc}"
+								itemValue="#{tipoCabina.codigoTc}"></f:selectItems> 
 							</h:selectOneMenu>
 						</h:panelGrid>
+						</p:panel>
+						
 						<h:panelGrid>
 							<p:commandButton value="Buscar" action="#{reservaControlador.buscar()}" process=":formReserva:tabViewId:reservaId" update=":formReserva:tabViewId"></p:commandButton>
 						</h:panelGrid>
-					</p:panel>
+					
 				</p:tab>
 
 				<p:tab id="seleccionId" title="Seleccion" disabled="#{!reservaControlador.tabSeleccion}">
@@ -93,8 +108,8 @@
 							</p:repeat>
 							</p:column>
 							<p:column width="20%">
-								<p:commandLink value="Desde: $#{producto.precioPo}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
-								update=":formReserva:tabViewId:seleccionId"/>
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" onclick="PF('dlgTarifa').show();" process=":formReserva:tabViewId:seleccionId"
+								disabled="#{reservaControlador.seleccionTarifaVueloIda}" update="formReserva:tablaTarifaCondicionId, :formReserva:tabViewId:seleccionId"/>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
@@ -110,12 +125,38 @@
 							</p:repeat>
 							</p:column>
 							<p:column width="20%">
-								<p:commandLink value="Desde: $#{producto.precioPo}"/>
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}"/>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
 				</p:tab>
 			</p:tabView>
+			<p:dialog header="Seleccione su Tarifa" widgetVar="dlgTarifa" id="tarifaDialogId"
+				closable="false" draggable="false">
+				
+				<p:dataTable value="#{reservaControlador.listaCondiciones}" var="condiciones" reflow="true" id="tablaTarifaCondicionId"
+								emptyMessage="No existen resutlados">
+					<p:column>
+						<h:outputText value="#{condiciones.nombreCo}"  rendered="#{condiciones.codigoCo != 7}"/>
+					</p:column>
+					
+					<p:columns var="tarifa"
+									value="#{reservaControlador.listaTarifaProductoIda}">
+									<f:facet name="header">
+										<h:outputText value="#{tarifa.tipoTarifa.nombreTt}" />
+									</f:facet>
+									<center>
+										
+										<h:outputText rendered="#{condiciones.codigoCo != 7}"
+											value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifa.tipoTarifa.codigoTt,condiciones.codigoCo)}" />
+										<h:commandLink rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" />	
+									</center>
+								</p:columns>
+				</p:dataTable>
+				
+				<p:commandButton update=":formReserva:tabViewId:vuelosIdaId" process="tarifaDialogId"
+				action="#{reservaControlador.cancelarSeleccionTarifa()}" oncomplete="PF('dlgTarifa').hide();" value="Cerrar"/>
+			</p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

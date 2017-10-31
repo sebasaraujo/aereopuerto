@@ -5,10 +5,14 @@
  */
 package ec.com.aereopuerto.facade;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import ec.com.aereopuerto.enumeradores.EstadoEnum;
 import ec.com.aereopuerto.facade.local.TipoCabinaFacadeLocal;
 import ec.com.aereopuerto.modelo.TipoCabina;
 
@@ -29,6 +33,15 @@ public class TipoCabinaFacade extends AbstractFacade<TipoCabina> implements Tipo
 
     public TipoCabinaFacade() {
         super(TipoCabina.class);
+    }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public List<TipoCabina> obtenerTipoCabinasActivo()
+    {
+    	Query q = em.createQuery("Select tc from TipoCabina tc where tc.estadoTc = :estado order by tc.codigoTc");
+    	q.setParameter("estado", EstadoEnum.ACTIVO.getValor());
+    	return q.getResultList();
     }
     
 }

@@ -69,6 +69,8 @@ public class TipoTarifa implements Serializable {
     private Date fechaActTt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoTarifa")
     private List<TarifaProducto> tarifaProductoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoTarifa")
+    private List<TarifaCondiciones> tarifaCondicionesList;
 
     public TipoTarifa() {
     }
@@ -134,7 +136,15 @@ public class TipoTarifa implements Serializable {
         this.tarifaProductoList = tarifaProductoList;
     }
 
-    @Override
+    public List<TarifaCondiciones> getTarifaCondicionesList() {
+		return tarifaCondicionesList;
+	}
+
+	public void setTarifaCondicionesList(List<TarifaCondiciones> tarifaCondicionesList) {
+		this.tarifaCondicionesList = tarifaCondicionesList;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (codigoTt != null ? codigoTt.hashCode() : 0);

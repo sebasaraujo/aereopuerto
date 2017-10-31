@@ -17,9 +17,9 @@ public class ProductoServiceImpl implements ProductoService{
 	private ProductoFacadeLocal productoFacade;
 	
 	@Override
-    public List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha)
+    public List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha, Integer tipoCabina)
     {
-		return productoFacade.obtenerProductosBusqueda(codigoAereopuertoSalida, codigoAereopuertoLlegada, fecha);
+		return productoFacade.obtenerProductosBusqueda(codigoAereopuertoSalida, codigoAereopuertoLlegada, fecha, tipoCabina);
     }
 	
 }

@@ -39,6 +39,6 @@ public interface ProductoFacadeLocal {
      * @param fecha
      * @return
      */
-	List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha);
+	List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha, Integer tipoCabina);
     
 }

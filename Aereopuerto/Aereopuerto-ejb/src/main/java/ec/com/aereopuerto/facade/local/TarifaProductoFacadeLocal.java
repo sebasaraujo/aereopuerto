@@ -29,5 +29,30 @@ public interface TarifaProductoFacadeLocal {
     List<TarifaProducto> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que devuelve el valor minimo de un producto
+     * @param codigoProducto
+     * @param codigoCabina
+     * @return
+     */
+	Double obtenerCostoMinimoProducto(Integer codigoProducto, Integer codigoCabina);
+
+	/**
+	 * Metodo que obtiene las tarifas de un prodcuto 
+	 * @param codigoProducto
+	 * @param codigoCabina
+	 * @return
+	 */
+	List<TarifaProducto> obtenerTarifaProductoXProductoCabina(Integer codigoProducto, Integer codigoCabina);
+
+	/**
+	 * Metodo que obtiene el valor del producto seleccionado
+	 * @param codigoProducto
+	 * @param codigoCabina
+	 * @param codigoTarifa
+	 * @return
+	 */
+	Double obtenerCostoProductoTarifaCabina(Integer codigoProducto, Integer codigoCabina, Integer codigoTarifa);
     
 }

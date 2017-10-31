@@ -15,11 +15,21 @@ import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
 
 import ec.com.aereopuerto.modelo.Aereopuerto;
+import ec.com.aereopuerto.modelo.Condiciones;
 import ec.com.aereopuerto.modelo.Producto;
 import ec.com.aereopuerto.modelo.Reserva;
+import ec.com.aereopuerto.modelo.TarifaCondiciones;
+import ec.com.aereopuerto.modelo.TarifaProducto;
+import ec.com.aereopuerto.modelo.TipoCabina;
+import ec.com.aereopuerto.modelo.TipoPasajero;
 import ec.com.aereopuerto.modelo.TipoReserva;
 import ec.com.aereopuerto.service.local.AereopuertoService;
+import ec.com.aereopuerto.service.local.CondicionesService;
 import ec.com.aereopuerto.service.local.ProductoService;
+import ec.com.aereopuerto.service.local.TarifaCondicionesService;
+import ec.com.aereopuerto.service.local.TarifaProductoService;
+import ec.com.aereopuerto.service.local.TipoCabinaService;
+import ec.com.aereopuerto.service.local.TipoPasajeroService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
 import ec.com.aereopuerto.util.Constantes;
 
@@ -34,7 +44,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	private Reserva reserva;
 	private List<TipoReserva> tipoReservas = new ArrayList<>();
-	private Integer codigoTipoReserva;
+	private Integer codigoTipoReserva = 1;
 	private boolean skip;
 	private Aereopuerto aereopuertoDesde;
 	private Date fechaSalida;
@@ -48,28 +58,54 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private List<Producto> listaProductosIda = new ArrayList<>();
 	private List<Producto> listaProductosRegreso = new ArrayList<>();
 	private boolean mostrarVuelosRegreso = false;
-
+	private List<TipoCabina> tipoCabinas = new ArrayList<>();
+	private Integer codigoTipoCabina;
+	private List<TipoPasajero> tipoPasajeros = new ArrayList<>();
+	private boolean seleccionTarifaVueloIda = false;
+	private List<TarifaProducto> listaTarifaProductoIda = new ArrayList<>();
+	private List<Condiciones> listaCondiciones = new ArrayList<>();
+	Integer codigoProductoSeleccionadoIda;
+	
 	@EJB
 	private TipoReservaService tipoReservaService;
 	@EJB
 	private AereopuertoService aereopuertoService;
 	@EJB
 	private ProductoService productoService;
+	@EJB
+	private TipoCabinaService tipoCabinaService;
+	@EJB
+	private TipoPasajeroService tipoPasajeroService;
+	@EJB
+	private TarifaProductoService tarifaProductoService;
+	@EJB
+	private CondicionesService condicionesService;
+	@EJB
+	private TarifaCondicionesService tarifaCondicionesService;
 
 	@PostConstruct
 	private void init() {
 		reserva = new Reserva();
 		tipoReservas = tipoReservaService.obtenerTiposReservasActivas();
+		tipoCabinas = tipoCabinaService.obtenerTipoCabinasActivo();
 		for(TipoReserva tr : tipoReservas)
 		{
 			SelectItem tipoReserva = new SelectItem(tr.getCodigoTr(), tr.getNombreTr());
 			tipoReservaItem.add(tipoReserva);
+			setCodigoTipoReserva(tr.getCodigoTr());
 		}
 		fechaActual = new Date();
 		fechaSalida = new Date();
-		codigoTipoReserva = 1;
 		tabReserva = true;
 		index = 0;
+		tipoPasajeros = tipoPasajeroService.obtenerTipoPasajeros();
+		for(TipoPasajero tp : tipoPasajeros)
+		{
+			if(tp.getCodigoTp().equals(Constantes.TIPO_PASAJERO_ADULTO))
+			{
+				tp.setNumeroPasajeros(1);
+			}
+		}
 	}
 
 
@@ -144,21 +180,57 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void buscar ()
 	{
-		listaProductosIda = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida);
-		listaProductosRegreso = productoService.obtenerProductosBusqueda(aereopuertoHacia.getCodigoAe(), aereopuertoDesde.getCodigoAe(), fechaRetorno);
+		System.out.println("tipo cabina: "+codigoTipoCabina);
+		listaProductosIda = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida, codigoTipoCabina);
+		listaProductosRegreso = productoService.obtenerProductosBusqueda(aereopuertoHacia.getCodigoAe(), aereopuertoDesde.getCodigoAe(), fechaRetorno, codigoTipoCabina);
 		tabSeleccion = true;
 		tabReserva = false;
 		index = 1;
+		seleccionTarifaVueloIda = false;
 	}
+	
 	
 	public void seleccionVueloIda(Integer codigoProducto)
 	{
-		System.out.println("codigo Tipo Reserva: "+codigoTipoReserva);
+		System.out.println("codigo Tipo Reserva: "+codigoTipoCabina);
 		System.out.println("Producto seleccionado: "+codigoProducto);
+		codigoProductoSeleccionadoIda = codigoProducto;
 		if(codigoTipoReserva.equals(Constantes.TIPO_RESERVA_IDA_VUELTA))
 		{
 			mostrarVuelosRegreso = true;
 		}
+		seleccionTarifaVueloIda = true;
+		listaCondiciones = condicionesService.obtenerCondiciones();
+		listaTarifaProductoIda = tarifaProductoService.obtenerTarifaProductoXProductoCabina(codigoProducto, codigoTipoCabina);
+		System.out.println("lista tarifa producto ida: "+listaTarifaProductoIda.size());
+	}
+	
+	public Double obtenerCostoMinimo(Integer codigoProducto)
+	{
+		return tarifaProductoService.obtenerCostoMinimoProducto(codigoProducto, codigoTipoCabina);
+	}
+	
+	public String obtenerDescripcionTarifaCondicion(Integer codigoTarifa, Integer codigoCondicion)
+	{
+		TarifaCondiciones tarifaCondicion = tarifaCondicionesService.obtenerTarifaCondiciones(codigoCondicion, codigoTarifa);
+		if(tarifaCondicion!= null)
+		{
+			return tarifaCondicion.getDescripcion();
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
+	public void cancelarSeleccionTarifa()
+	{
+		seleccionTarifaVueloIda = false;
+	}
+	
+	public Double obtenerCostoProductoTarifaCabina(Integer tarifa)
+	{
+		return tarifaProductoService.obtenerCostoProductoTarifaCabina(codigoProductoSeleccionadoIda, codigoTipoCabina, tarifa);
 	}
 	
 	public Reserva getReserva() {
@@ -301,6 +373,76 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setMostrarVuelosRegreso(boolean mostrarVuelosRegreso) {
 		this.mostrarVuelosRegreso = mostrarVuelosRegreso;
+	}
+
+
+	public List<TipoCabina> getTipoCabinas() {
+		return tipoCabinas;
+	}
+
+
+	public void setTipoCabinas(List<TipoCabina> tipoCabinas) {
+		this.tipoCabinas = tipoCabinas;
+	}
+
+
+	public Integer getCodigoTipoCabina() {
+		return codigoTipoCabina;
+	}
+
+
+	public void setCodigoTipoCabina(Integer codigoTipoCabina) {
+		this.codigoTipoCabina = codigoTipoCabina;
+	}
+
+
+	public List<TipoPasajero> getTipoPasajeros() {
+		return tipoPasajeros;
+	}
+
+
+	public void setTipoPasajeros(List<TipoPasajero> tipoPasajeros) {
+		this.tipoPasajeros = tipoPasajeros;
+	}
+
+
+	public boolean isSeleccionTarifaVueloIda() {
+		return seleccionTarifaVueloIda;
+	}
+
+
+	public void setSeleccionTarifaVueloIda(boolean seleccionTarifaVueloIda) {
+		this.seleccionTarifaVueloIda = seleccionTarifaVueloIda;
+	}
+
+
+	public List<TarifaProducto> getListaTarifaProductoIda() {
+		return listaTarifaProductoIda;
+	}
+
+
+	public void setListaTarifaProductoIda(List<TarifaProducto> listaTarifaProductoIda) {
+		this.listaTarifaProductoIda = listaTarifaProductoIda;
+	}
+
+
+	public List<Condiciones> getListaCondiciones() {
+		return listaCondiciones;
+	}
+
+
+	public void setListaCondiciones(List<Condiciones> listaCondiciones) {
+		this.listaCondiciones = listaCondiciones;
+	}
+
+
+	public Integer getCodigoProductoSeleccionadoIda() {
+		return codigoProductoSeleccionadoIda;
+	}
+
+
+	public void setCodigoProductoSeleccionadoIda(Integer codigoProductoSeleccionadoIda) {
+		this.codigoProductoSeleccionadoIda = codigoProductoSeleccionadoIda;
 	}
 
 }
