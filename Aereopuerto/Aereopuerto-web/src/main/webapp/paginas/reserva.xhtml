@@ -129,7 +129,7 @@
 												
 												<h:outputText rendered="#{condiciones.codigoCo != 7}"
 													value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifa.tipoTarifa.codigoTt,condiciones.codigoCo)}" />
-												<h:commandLink rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" />	
+												<h:commandLink style="font-size: 30px !important" rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" />	
 											</center>
 										</p:columns>
 						</p:dataTable>
