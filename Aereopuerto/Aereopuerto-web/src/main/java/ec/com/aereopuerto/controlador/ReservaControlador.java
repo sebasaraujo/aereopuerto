@@ -64,7 +64,8 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private boolean seleccionTarifaVueloIda = false;
 	private List<TarifaProducto> listaTarifaProductoIda = new ArrayList<>();
 	private List<Condiciones> listaCondiciones = new ArrayList<>();
-	Integer codigoProductoSeleccionadoIda;
+	private Integer codigoProductoSeleccionadoIda;
+	private boolean tablaCondicionesTarifaIda = false;
 	
 	@EJB
 	private TipoReservaService tipoReservaService;
@@ -98,6 +99,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		fechaSalida = new Date();
 		tabReserva = true;
 		index = 0;
+		tablaCondicionesTarifaIda = false;
 		tipoPasajeros = tipoPasajeroService.obtenerTipoPasajeros();
 		for(TipoPasajero tp : tipoPasajeros)
 		{
@@ -187,6 +189,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		tabReserva = false;
 		index = 1;
 		seleccionTarifaVueloIda = false;
+		tablaCondicionesTarifaIda = false;
 	}
 	
 	
@@ -200,6 +203,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 			mostrarVuelosRegreso = true;
 		}
 		seleccionTarifaVueloIda = true;
+		tablaCondicionesTarifaIda = true;
 		listaCondiciones = condicionesService.obtenerCondiciones();
 		listaTarifaProductoIda = tarifaProductoService.obtenerTarifaProductoXProductoCabina(codigoProducto, codigoTipoCabina);
 		System.out.println("lista tarifa producto ida: "+listaTarifaProductoIda.size());
@@ -225,7 +229,9 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void cancelarSeleccionTarifa()
 	{
+		System.out.println("cancelar");
 		seleccionTarifaVueloIda = false;
+		tablaCondicionesTarifaIda = false;
 	}
 	
 	public Double obtenerCostoProductoTarifaCabina(Integer tarifa)
@@ -443,6 +449,16 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setCodigoProductoSeleccionadoIda(Integer codigoProductoSeleccionadoIda) {
 		this.codigoProductoSeleccionadoIda = codigoProductoSeleccionadoIda;
+	}
+
+
+	public boolean isTablaCondicionesTarifaIda() {
+		return tablaCondicionesTarifaIda;
+	}
+
+
+	public void setTablaCondicionesTarifaIda(boolean tablaCondicionesTarifaIda) {
+		this.tablaCondicionesTarifaIda = tablaCondicionesTarifaIda;
 	}
 
 }
