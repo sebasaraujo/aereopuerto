@@ -21,4 +21,10 @@ public class TipoReservaServiceImpl implements TipoReservaService{
 		return tipoReservaFacade.obtenerTiposReservasActivas();
     }
 	
+	@Override
+	public TipoReserva obtenerXId(Integer codigo)
+	{
+		return tipoReservaFacade.find(codigo);
+	}
+	
 }

@@ -49,4 +49,17 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
     	return q.getResultList();
     }
     
+    @Override
+    public Producto obtenerProductoXId(Integer codigo)
+    {
+    	try {
+    		Query q = em.createQuery("Select p from Producto p left join fetch p.productoVueloList pv left join fetch pv.vuelo v "
+        			+ "where p.codigoPo = :codigo");
+        	q.setParameter("codigo", codigo);
+        	return (Producto)q.getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
+    }
+    
 }

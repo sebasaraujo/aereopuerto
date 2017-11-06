@@ -76,7 +76,6 @@ public class TarifaProductoFacade extends AbstractFacade<TarifaProducto> impleme
         	q.setParameter("codigoTarifa", codigoTarifa);
         	return (Double) q.getSingleResult();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return 0.0;
 		}
     	

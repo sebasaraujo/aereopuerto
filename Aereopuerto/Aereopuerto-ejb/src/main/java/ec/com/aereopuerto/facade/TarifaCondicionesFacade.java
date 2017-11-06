@@ -44,7 +44,6 @@ public class TarifaCondicionesFacade extends AbstractFacade<TarifaCondiciones> i
         	q.setParameter("codigoTarifa", codigoTarifa);
         	return (TarifaCondiciones) q.getSingleResult();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
     	

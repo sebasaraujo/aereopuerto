@@ -31,6 +31,7 @@ import ec.com.aereopuerto.service.local.TarifaProductoService;
 import ec.com.aereopuerto.service.local.TipoCabinaService;
 import ec.com.aereopuerto.service.local.TipoPasajeroService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
+import ec.com.aereopuerto.service.local.TipoTarifaService;
 import ec.com.aereopuerto.util.Constantes;
 
 @Named(value = "reservaControlador")
@@ -66,6 +67,13 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private List<Condiciones> listaCondiciones = new ArrayList<>();
 	private Integer codigoProductoSeleccionadoIda;
 	private boolean tablaCondicionesTarifaIda = false;
+	private boolean panelResumenVueloIda = false;
+	private boolean tablaCondicionesTarifaRegreso = false;
+	private Integer codigoProductoSeleccionadoResgreso;
+	private boolean seleccionTarifaVueloRegreso = false;
+	private List<TarifaProducto> listaTarifaProductoRegreso = new ArrayList<>();
+	private List<Condiciones> listaCondicionesRegreso = new ArrayList<>();
+	private boolean panelResumenVueloRegreso = false;
 	
 	@EJB
 	private TipoReservaService tipoReservaService;
@@ -83,6 +91,8 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private CondicionesService condicionesService;
 	@EJB
 	private TarifaCondicionesService tarifaCondicionesService;
+	@EJB
+	private TipoTarifaService tipoTarifaService;
 
 	@PostConstruct
 	private void init() {
@@ -100,6 +110,9 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		tabReserva = true;
 		index = 0;
 		tablaCondicionesTarifaIda = false;
+		tablaCondicionesTarifaRegreso = false;
+		panelResumenVueloIda = false;
+		panelResumenVueloRegreso = false;
 		tipoPasajeros = tipoPasajeroService.obtenerTipoPasajeros();
 		for(TipoPasajero tp : tipoPasajeros)
 		{
@@ -190,23 +203,24 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		index = 1;
 		seleccionTarifaVueloIda = false;
 		tablaCondicionesTarifaIda = false;
+		tablaCondicionesTarifaRegreso = false;
+		panelResumenVueloIda = false;
+		panelResumenVueloRegreso = false;
+		reserva.setDesdeRs(aereopuertoDesde);
+		reserva.setFechaSalida(fechaSalida);
+		reserva.setFechaRetorno(fechaRetorno);
+		reserva.setTipoReserva(tipoReservaService.obtenerXId(codigoTipoReserva));
+		reserva.setTipoCabina(tipoCabinaService.obtenerXId(codigoTipoCabina));
 	}
 	
 	
 	public void seleccionVueloIda(Integer codigoProducto)
 	{
-		System.out.println("codigo Tipo Reserva: "+codigoTipoCabina);
-		System.out.println("Producto seleccionado: "+codigoProducto);
 		codigoProductoSeleccionadoIda = codigoProducto;
-		if(codigoTipoReserva.equals(Constantes.TIPO_RESERVA_IDA_VUELTA))
-		{
-			mostrarVuelosRegreso = true;
-		}
 		seleccionTarifaVueloIda = true;
 		tablaCondicionesTarifaIda = true;
 		listaCondiciones = condicionesService.obtenerCondiciones();
 		listaTarifaProductoIda = tarifaProductoService.obtenerTarifaProductoXProductoCabina(codigoProducto, codigoTipoCabina);
-		System.out.println("lista tarifa producto ida: "+listaTarifaProductoIda.size());
 	}
 	
 	public Double obtenerCostoMinimo(Integer codigoProducto)
@@ -237,6 +251,41 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	public Double obtenerCostoProductoTarifaCabina(Integer tarifa)
 	{
 		return tarifaProductoService.obtenerCostoProductoTarifaCabina(codigoProductoSeleccionadoIda, codigoTipoCabina, tarifa);
+	}
+	
+	public void seleccionTarifaIda(Integer codigoTarifa)
+	{
+		reserva.setTipoTarifaIda(tipoTarifaService.obtenerXId(codigoTarifa));
+		reserva.setProductoIdaRs(productoService.obtenerXId(codigoProductoSeleccionadoIda));
+		tablaCondicionesTarifaIda = false;
+		panelResumenVueloIda = true;
+		if(codigoTipoReserva.equals(Constantes.TIPO_RESERVA_IDA_VUELTA))
+		{
+			mostrarVuelosRegreso = true;
+		}
+	}
+	
+	public void seleccionVueloRegreo(Integer codigoProducto)
+	{
+		codigoProductoSeleccionadoResgreso = codigoProducto;
+		seleccionTarifaVueloRegreso = true;
+		tablaCondicionesTarifaRegreso = true;
+		listaCondicionesRegreso = condicionesService.obtenerCondiciones();
+		listaTarifaProductoRegreso = tarifaProductoService.obtenerTarifaProductoXProductoCabina(codigoProducto, codigoTipoCabina);
+	}
+	
+	public void cancelarSeleccionTarifaRegreso()
+	{
+		seleccionTarifaVueloRegreso = false;
+		tablaCondicionesTarifaRegreso = false;
+	}
+	
+	public void seleccionTarifaRegreso(Integer codigoTarifa)
+	{
+		reserva.setTipoTarifaRegreso(tipoTarifaService.obtenerXId(codigoTarifa));
+		reserva.setProductoRetornoRs(productoService.obtenerXId(codigoProductoSeleccionadoResgreso));
+		tablaCondicionesTarifaRegreso = false;
+		panelResumenVueloRegreso = true;
 	}
 	
 	public Reserva getReserva() {
@@ -459,6 +508,66 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setTablaCondicionesTarifaIda(boolean tablaCondicionesTarifaIda) {
 		this.tablaCondicionesTarifaIda = tablaCondicionesTarifaIda;
+	}
+
+
+	public boolean isPanelResumenVueloIda() {
+		return panelResumenVueloIda;
+	}
+
+
+	public void setPanelResumenVueloIda(boolean panelResumenVueloIda) {
+		this.panelResumenVueloIda = panelResumenVueloIda;
+	}
+
+
+	public boolean isTablaCondicionesTarifaRegreso() {
+		return tablaCondicionesTarifaRegreso;
+	}
+
+
+	public void setTablaCondicionesTarifaRegreso(boolean tablaCondicionesTarifaRegreso) {
+		this.tablaCondicionesTarifaRegreso = tablaCondicionesTarifaRegreso;
+	}
+
+
+	public boolean isSeleccionTarifaVueloRegreso() {
+		return seleccionTarifaVueloRegreso;
+	}
+
+
+	public void setSeleccionTarifaVueloRegreso(boolean seleccionTarifaVueloRegreso) {
+		this.seleccionTarifaVueloRegreso = seleccionTarifaVueloRegreso;
+	}
+
+
+	public List<TarifaProducto> getListaTarifaProductoRegreso() {
+		return listaTarifaProductoRegreso;
+	}
+
+
+	public void setListaTarifaProductoRegreso(List<TarifaProducto> listaTarifaProductoRegreso) {
+		this.listaTarifaProductoRegreso = listaTarifaProductoRegreso;
+	}
+
+
+	public List<Condiciones> getListaCondicionesRegreso() {
+		return listaCondicionesRegreso;
+	}
+
+
+	public void setListaCondicionesRegreso(List<Condiciones> listaCondicionesRegreso) {
+		this.listaCondicionesRegreso = listaCondicionesRegreso;
+	}
+
+
+	public boolean isPanelResumenVueloRegreso() {
+		return panelResumenVueloRegreso;
+	}
+
+
+	public void setPanelResumenVueloRegreso(boolean panelResumenVueloRegreso) {
+		this.panelResumenVueloRegreso = panelResumenVueloRegreso;
 	}
 
 }

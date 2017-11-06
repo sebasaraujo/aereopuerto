@@ -22,4 +22,10 @@ public class ProductoServiceImpl implements ProductoService{
 		return productoFacade.obtenerProductosBusqueda(codigoAereopuertoSalida, codigoAereopuertoLlegada, fecha, tipoCabina);
     }
 	
+	@Override
+	public Producto obtenerXId(Integer codigo)
+	{
+		return productoFacade.obtenerProductoXId(codigo);
+	}
+	
 }

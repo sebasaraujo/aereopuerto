@@ -15,4 +15,11 @@ public interface TipoReservaService {
 	 */
 	List<TipoReserva> obtenerTiposReservasActivas();
 
+	/**
+	 * Metodo que obtiene el tipo de reserva por id
+	 * @param codigo
+	 * @return
+	 */
+	TipoReserva obtenerXId(Integer codigo);
+
 }

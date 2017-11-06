@@ -15,4 +15,11 @@ public interface TipoCabinaService {
 	 */
 	List<TipoCabina> obtenerTipoCabinasActivo();
 
+	/**
+	 * Metodo que obtiene el tipo cabina por id
+	 * @param codigo
+	 * @return
+	 */
+	TipoCabina obtenerXId(Integer codigo);
+
 }

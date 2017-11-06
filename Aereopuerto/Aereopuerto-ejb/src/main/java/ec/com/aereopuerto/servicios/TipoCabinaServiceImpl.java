@@ -21,4 +21,10 @@ public class TipoCabinaServiceImpl implements TipoCabinaService{
 		return tipoCabinaFacade.obtenerTipoCabinasActivo();
     }
 	
+	@Override
+	public TipoCabina obtenerXId(Integer codigo)
+	{
+		return tipoCabinaFacade.find(codigo);
+	}
+	
 }

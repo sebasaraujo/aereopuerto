@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	
+	<p:panel header="Selecciona tu ida" id="vuelosIdaId" rendered="#{!reservaControlador.panelResumenVueloIda}">
+						<p:dataTable value="#{reservaControlador.listaProductosIda}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+							<p:column width="20%">
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
+								disabled="#{reservaControlador.seleccionTarifaVueloIda}" update="formReserva:tabViewId"/>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="condicionesTarifaId" rendered="#{reservaControlador.tablaCondicionesTarifaIda}" header="Tarifa">
+						<p:dataTable value="#{reservaControlador.listaCondiciones}" var="condiciones" reflow="true" id="tablaTarifaCondicionId"
+							emptyMessage="No existen resutlados">
+							<p:column>
+								<h:outputText value="#{condiciones.nombreCo}"  rendered="#{condiciones.codigoCo != 7}"/>
+							</p:column>
+							
+							<p:columns var="tarifa"
+											value="#{reservaControlador.listaTarifaProductoIda}">
+											<f:facet name="header">
+												<h:outputText value="#{tarifa.tipoTarifa.nombreTt}" />
+											</f:facet>
+											<center>
+												
+												<h:outputText rendered="#{condiciones.codigoCo != 7}"
+													value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifa.tipoTarifa.codigoTt,condiciones.codigoCo)}" />
+												<h:commandLink style="font-size: 30px !important" rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" 
+												action="#{reservaControlador.seleccionTarifaIda(tarifa.tipoTarifa.codigoTt)}" update=":formReserva:tabViewId:seleccionId, condicionesTarifaId" process="formReserva:tabViewId:condicionesTarifaId"/>	
+											</center>
+										</p:columns>
+						</p:dataTable>
+						
+						<p:commandButton update=":formReserva:tabViewId:seleccionId, condicionesTarifaId" process="formReserva:tabViewId:condicionesTarifaId"
+						action="#{reservaControlador.cancelarSeleccionTarifa()}" value="Cerrar"/>		
+					</p:panel>	
+					<p:panel header="Itinerario Ida" id="resumenIdaId" rendered="#{reservaControlador.panelResumenVueloIda}">
+						<p:dataTable value="#{reservaControlador.reserva.productoIdaRs}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel header="Selecciona tu regreso" id="vuelosRegresoId" rendered="#{reservaControlador.mostrarVuelosRegreso and !reservaControlador.panelResumenVueloRegreso}">
+						<p:dataTable value="#{reservaControlador.listaProductosRegreso}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+							<p:column width="20%">
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloRegreo(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
+								disabled="#{reservaControlador.seleccionTarifaVueloRegreso}" update="formReserva:tabViewId"/>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="condicionesTarifaRegresoId" rendered="#{reservaControlador.tablaCondicionesTarifaRegreso}" header="Tarifa Regreso">
+						<p:dataTable value="#{reservaControlador.listaCondicionesRegreso}" var="condiciones" reflow="true" id="tablaTarifaCondicionRegresoId"
+							emptyMessage="No existen resutlados">
+							<p:column>
+								<h:outputText value="#{condiciones.nombreCo}"  rendered="#{condiciones.codigoCo != 7}"/>
+							</p:column>
+							
+							<p:columns var="tarifa"
+											value="#{reservaControlador.listaTarifaProductoRegreso}">
+											<f:facet name="header">
+												<h:outputText value="#{tarifa.tipoTarifa.nombreTt}" />
+											</f:facet>
+											<center>
+												
+												<h:outputText rendered="#{condiciones.codigoCo != 7}"
+													value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifa.tipoTarifa.codigoTt,condiciones.codigoCo)}" />
+												<h:commandLink style="font-size: 30px !important" rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" 
+												action="#{reservaControlador.seleccionTarifaRegreso(tarifa.tipoTarifa.codigoTt)}" update=":formReserva:tabViewId:seleccionId, condicionesTarifaRegresoId" process="formReserva:tabViewId:condicionesTarifaRegresoId"/>	
+											</center>
+										</p:columns>
+						</p:dataTable>
+						
+						<p:commandButton update=":formReserva:tabViewId:seleccionId, condicionesTarifaRegresoId" process="formReserva:tabViewId:condicionesTarifaRegresoId"
+						action="#{reservaControlador.cancelarSeleccionTarifaRegreso()}" value="Cerrar"/>		
+					</p:panel>	
+					<p:panel header="Itinerario Regreso" id="resumenRegresoId" rendered="#{reservaControlador.panelResumenVueloRegreso}">
+						<p:dataTable value="#{reservaControlador.reserva.productoRetornoRs}" var="producto">
+							<p:column>
+							<p:repeat value="#{producto.productoVueloList}" var="productoVuelo">
+								<h:panelGrid columns="3" style="text-align : center;     border-style: hidden !important;">
+									<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu} #{producto.aereopuertoSalida.nemonicoAe}&#160;&#160;>&#160;&#160; #{productoVuelo.vuelo.horaLlegadaVu} #{producto.aereopuertoLlegada.nemonicoAe}" />
+									<h:outputText value="#{productoVuelo.vuelo.duracionVu}m" />
+									<h:outputText value="#{producto.productoVueloList.size() > 1 ? 'Con Escalas' : 'Directo'}" />
+								</h:panelGrid>
+							</p:repeat>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+</ui:composition>

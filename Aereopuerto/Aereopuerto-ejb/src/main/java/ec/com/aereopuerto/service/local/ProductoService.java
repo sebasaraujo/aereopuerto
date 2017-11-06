@@ -19,4 +19,11 @@ public interface ProductoService {
 	 */
 	List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha, Integer tipoCabina);
 
+	/**
+	 * Metodo que obtiene el producto
+	 * @param codigo
+	 * @return
+	 */
+	Producto obtenerXId(Integer codigo);
+
 }

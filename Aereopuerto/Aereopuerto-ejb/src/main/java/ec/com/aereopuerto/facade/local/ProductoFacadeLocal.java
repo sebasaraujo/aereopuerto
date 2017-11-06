@@ -40,5 +40,13 @@ public interface ProductoFacadeLocal {
      * @return
      */
 	List<Producto> obtenerProductosBusqueda(Integer codigoAereopuertoSalida, Integer codigoAereopuertoLlegada, Date fecha, Integer tipoCabina);
+
+	
+	/**
+	 * Metodo que obtiene el producto
+	 * @param codigo
+	 * @return
+	 */
+	Producto obtenerProductoXId(Integer codigo);
     
 }

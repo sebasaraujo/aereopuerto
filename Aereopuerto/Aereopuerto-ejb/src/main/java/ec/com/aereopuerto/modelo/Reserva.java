@@ -46,13 +46,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Reserva.findByFechaActRs", query = "SELECT r FROM Reserva r WHERE r.fechaActRs = :fechaActRs")})
 public class Reserva implements Serializable {
 
-    @JoinColumn(name = "producto_ida_rs", referencedColumnName = "codigo_po")
-    @ManyToOne(optional = false)
-    private Producto productoIdaRs;
-    @JoinColumn(name = "producto_retorno_rs", referencedColumnName = "codigo_po")
-    @ManyToOne
-    private Producto productoRetornoRs;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,6 +81,12 @@ public class Reserva implements Serializable {
     @Column(name = "fecha_act_rs")
     @Temporal(TemporalType.DATE)
     private Date fechaActRs;
+    @JoinColumn(name = "producto_ida_rs", referencedColumnName = "codigo_po")
+    @ManyToOne(optional = false)
+    private Producto productoIdaRs;
+    @JoinColumn(name = "producto_retorno_rs", referencedColumnName = "codigo_po")
+    @ManyToOne
+    private Producto productoRetornoRs;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reserva")
     private List<PasajeroReserva> pasajeroReservaList;
     @JoinColumn(name = "desde_rs", referencedColumnName = "codigo_ae")
@@ -99,6 +98,16 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "tipo_reserva", referencedColumnName = "codigo_tr")
     @ManyToOne(optional = false)
     private TipoReserva tipoReserva;
+    @JoinColumn(name = "tipo_cabina", referencedColumnName = "codigo_tc")
+    @ManyToOne(optional = false)
+    private TipoCabina tipoCabina;
+    @JoinColumn(name = "tipo_tarifa_ida", referencedColumnName = "codigo_tt")
+    @ManyToOne(optional = false)
+    private TipoTarifa tipoTarifaIda;
+    @JoinColumn(name = "tipo_tarifa_regreso", referencedColumnName = "codigo_tt")
+    @ManyToOne(optional = false)
+    private TipoTarifa tipoTarifaRegreso;
+    
 
     public Reserva() {
     }
@@ -245,6 +254,30 @@ public class Reserva implements Serializable {
 
 	public void setTipoReserva(TipoReserva tipoReserva) {
 		this.tipoReserva = tipoReserva;
+	}
+
+	public TipoCabina getTipoCabina() {
+		return tipoCabina;
+	}
+
+	public void setTipoCabina(TipoCabina tipoCabina) {
+		this.tipoCabina = tipoCabina;
+	}
+
+	public TipoTarifa getTipoTarifaIda() {
+		return tipoTarifaIda;
+	}
+
+	public void setTipoTarifaIda(TipoTarifa tipoTarifaIda) {
+		this.tipoTarifaIda = tipoTarifaIda;
+	}
+
+	public TipoTarifa getTipoTarifaRegreso() {
+		return tipoTarifaRegreso;
+	}
+
+	public void setTipoTarifaRegreso(TipoTarifa tipoTarifaRegreso) {
+		this.tipoTarifaRegreso = tipoTarifaRegreso;
 	}
     
 }
