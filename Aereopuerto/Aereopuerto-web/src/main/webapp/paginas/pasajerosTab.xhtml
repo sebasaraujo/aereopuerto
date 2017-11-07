@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<p:panel header="Datos de los pasajeros">
+		<p:accordionPanel value="#{reservaControlador.listaPasajeros}"
+			var="pasajero">
+			<p:tab
+				title="Pasajero #{pasajero.numeroPasajero}: #{pasajero.tipoPasajero.nombreTp} ">
+				<h:panelGrid columns="4" cellpadding="5" style="text-align: center" columnClasses=", padding-left-5">
+					<h:outputText value="Nombre: " />
+					<p:inputText placeholder="Nombre" value="#{pasajero.nombrePs}" />
+					<h:outputText value="Apellido: " />
+					<p:inputText placeholder="Apellido" value="#{pasajero.apellidoPs}" />
+					<h:outputText value="Tipo Identificación: " />
+					<h:selectOneMenu id="tipoIdentificacionId"
+						value="#{pasajero.codigoTipoIdentificacion}">
+						<f:selectItems value="#{reservaControlador.tipoIdentificaciones}"
+							var="tipoIdentificacion"
+							itemLabel="#{tipoIdentificacion.nombreTi}"
+							itemValue="#{tipoIdentificacion.codigoTi}"></f:selectItems>
+					</h:selectOneMenu>
+					<h:outputText value="Numero Identificacion" />
+					<p:inputText placeholder="Numero Identificacion" value="#{pasajero.identifiacionPs}"/>
+					<h:outputText value="Pais: " />
+					<h:selectOneMenu id="paisId"
+						value="#{reservaControlador.codigoPais}">
+						<f:selectItems value="#{reservaControlador.paises}"
+							var="pais"
+							itemLabel="#{pais.nombrePa}"
+							itemValue="#{pais.codigoPa}"></f:selectItems>
+					</h:selectOneMenu>
+					<h:outputText value="Correo electronico" />
+					<p:inputText placeholder="Correo electronico" value="#{pasajero.correoPs}" validatorMessage="El correo ingresado es incorrecto">
+						<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+					</p:inputText>
+				</h:panelGrid>
+			</p:tab>
+		</p:accordionPanel>
+		<div class="nk-gap"></div>
+					<p:panel id="panelContinuarPasajeroId" style="border-style:hidden !important">
+						<p:commandButton update=":formReserva:tabViewId" process=":formReserva:tabViewId:pasajerosId" value="Continuar" action="#{reservaControlador.continuarTabPasajeros()}" rendered="#{reservaControlador.panelResumenVueloIda and ((reservaControlador.codigoTipoReserva == 1 and reservaControlador.panelResumenVueloRegreso) or (reservaControlador.codigoTipoReserva != 1))}"/>
+					</p:panel>
+	</p:panel>
+
+
+
+</ui:composition>

@@ -31,7 +31,7 @@
 
 	<link rel="stylesheet"
 		href="#{request.contextPath}/assets/css/combined.css" />
-<!-- 	<link rel="stylesheet" href="#{request.contextPath}/css/font-awesome.min.css"/> -->
+	<!-- 	<link rel="stylesheet" href="#{request.contextPath}/css/font-awesome.min.css"/> -->
 
 	<!-- END: Styles -->
 
@@ -59,9 +59,9 @@
 
 <body style="background-color: #ebebeb">
 
-	<ui:insert name="menu">
-<!-- 		<ui:include src="/plantillas/menuInterno.xhtml" /> -->
-	</ui:insert>
+<!-- 	<ui:insert name="menu"> -->
+<!-- 		<ui:include src="/plantillas/menu.xhtml" /> -->
+<!-- 	</ui:insert> -->
 
 
 	<div class="nk-main">
@@ -70,9 +70,9 @@
 		<div class="row vertical-gap">
 			<div class="col-lg-2"
 				style="padding-left: 1%; background: #404a4e !important;">
-<!-- 				<ui:insert name="menu"> -->
-<!-- 					<ui:include src="/plantillas/menuLateral.xhtml" /> -->
-<!-- 				</ui:insert> -->
+				<!-- 				<ui:insert name="menu"> -->
+				<!-- 					<ui:include src="/plantillas/menuLateral.xhtml" /> -->
+				<!-- 				</ui:insert> -->
 			</div>
 			<div class="col-lg-10">
 				<!-- PANEL DE ESTADO  -->
@@ -84,10 +84,6 @@
                             Por favor espere...
 				</p:dialog>
 				<!-- FIN PANEL DE ESTADO  -->
-				<p:dialog header="Seleccione su Tarifa" modal="true"
-						widgetVar="dlgTarifa" height="100">
-						<h:outputText value="This dialog has nice effects." />
-					</p:dialog>
 				<p:messages globalOnly="true" showDetail="true" autoUpdate="true"
 					closable="true" />
 				<div class="container">
@@ -96,9 +92,9 @@
 						<div class="nk-isotope-item">
 							<div class="nk-blog-post">
 								<div class="nk-post-text">
-								<ui:insert name="contenido">
-														<h:outputText value="Contenido de la p&#255;gina" />
-													</ui:insert>
+									<ui:insert name="contenido">
+										<h:outputText value="Contenido de la p&#255;gina" />
+									</ui:insert>
 								</div>
 							</div>
 						</div>

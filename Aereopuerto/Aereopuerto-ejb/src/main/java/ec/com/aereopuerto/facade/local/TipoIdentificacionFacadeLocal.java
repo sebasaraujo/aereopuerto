@@ -29,5 +29,11 @@ public interface TipoIdentificacionFacadeLocal {
     List<TipoIdentificacion> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que obtiene todos los tipos de Identificacion activos
+     * @return
+     */
+	List<TipoIdentificacion> obtenerTipoIdentificacion();
     
 }

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	
+		<p:panel header="Itinerario">
+			<p:dataTable value="#{reservaControlador.reserva.productoIdaRs.productoVueloList}" var="productoVuelo" style="text-align: center">
+				<p:column headerText="Fecha">
+					<h:outputText value="#{productoVuelo.vuelo.fechaVu}" />
+				</p:column>
+				<p:column headerText="Salida">
+					<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu}" />
+				</p:column>
+				<p:column headerText="Llegada">
+					<h:outputText value="#{productoVuelo.vuelo.horaLlegadaVu}" />
+				</p:column>
+				<p:column headerText="Vuelo">
+					<h:outputText value="#{productoVuelo.vuelo.numeroVu}" />
+				</p:column>
+				<p:column headerText="Cabina">
+					<h:outputText value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
+				</p:column>
+			</p:dataTable>
+			<div class="nk-gap"></div>	
+			<p:dataTable value="#{reservaControlador.reserva.productoRetornoRs.productoVueloList}" var="productoVuelo" style="text-align: center">
+				<p:column headerText="Fecha">
+					<h:outputText value="#{productoVuelo.vuelo.fechaVu}" />
+				</p:column>
+				<p:column headerText="Salida">
+					<h:outputText value="#{productoVuelo.vuelo.horaSalidaVu}" />
+				</p:column>
+				<p:column headerText="Llegada">
+					<h:outputText value="#{productoVuelo.vuelo.horaLlegadaVu}" />
+				</p:column>
+				<p:column headerText="Vuelo">
+					<h:outputText value="#{productoVuelo.vuelo.numeroVu}" />
+				</p:column>
+				<p:column headerText="Cabina">
+					<h:outputText value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<div class="nk-gap"></div>
+		<p:panel header="Tarifa en dólares americanos">
+			aqui va el costo
+		</p:panel>
+	
+
+
+</ui:composition>

@@ -39,7 +39,7 @@ public class TipoPasajeroFacade extends AbstractFacade<TipoPasajero> implements 
 	@Override
     public List<TipoPasajero> obtenerTipoPasajeros()
     {
-    	Query q = em.createQuery("Select tp from TipoPasajero tp where tp.estadoTp = :estado order by tp.nombreTp");
+    	Query q = em.createQuery("Select tp from TipoPasajero tp where tp.estadoTp = :estado order by tp.codigoTp");
     	q.setParameter("estado", EstadoEnum.ACTIVO.getValor());
     	return q.getResultList();
     }

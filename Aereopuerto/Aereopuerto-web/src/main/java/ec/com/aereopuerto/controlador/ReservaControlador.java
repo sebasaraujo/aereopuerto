@@ -16,19 +16,24 @@ import org.primefaces.event.SelectEvent;
 
 import ec.com.aereopuerto.modelo.Aereopuerto;
 import ec.com.aereopuerto.modelo.Condiciones;
+import ec.com.aereopuerto.modelo.Pais;
+import ec.com.aereopuerto.modelo.Pasajero;
 import ec.com.aereopuerto.modelo.Producto;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.TarifaCondiciones;
 import ec.com.aereopuerto.modelo.TarifaProducto;
 import ec.com.aereopuerto.modelo.TipoCabina;
+import ec.com.aereopuerto.modelo.TipoIdentificacion;
 import ec.com.aereopuerto.modelo.TipoPasajero;
 import ec.com.aereopuerto.modelo.TipoReserva;
 import ec.com.aereopuerto.service.local.AereopuertoService;
 import ec.com.aereopuerto.service.local.CondicionesService;
+import ec.com.aereopuerto.service.local.PaisService;
 import ec.com.aereopuerto.service.local.ProductoService;
 import ec.com.aereopuerto.service.local.TarifaCondicionesService;
 import ec.com.aereopuerto.service.local.TarifaProductoService;
 import ec.com.aereopuerto.service.local.TipoCabinaService;
+import ec.com.aereopuerto.service.local.TipoIdentificacionService;
 import ec.com.aereopuerto.service.local.TipoPasajeroService;
 import ec.com.aereopuerto.service.local.TipoReservaService;
 import ec.com.aereopuerto.service.local.TipoTarifaService;
@@ -55,6 +60,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private List<SelectItem> tipoReservaItem = new ArrayList<>();
 	private boolean tabReserva = false;
 	private boolean tabSeleccion = false;
+	private boolean tabPasajeros = false;
 	private Integer index = 0;
 	private List<Producto> listaProductosIda = new ArrayList<>();
 	private List<Producto> listaProductosRegreso = new ArrayList<>();
@@ -75,6 +81,14 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private List<Condiciones> listaCondicionesRegreso = new ArrayList<>();
 	private boolean panelResumenVueloRegreso = false;
 	
+	//Variables seccion Pasajeros
+	private List<Pasajero> listaPasajeros = new ArrayList<>();
+	private List<TipoIdentificacion> tipoIdentificaciones = new ArrayList<>();
+	private Integer codigoTipoIdentificacion;
+	private List<Pais> paises = new ArrayList<>();
+	private Integer codigoPais;
+	private boolean tabPago = false;
+	
 	@EJB
 	private TipoReservaService tipoReservaService;
 	@EJB
@@ -93,6 +107,10 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private TarifaCondicionesService tarifaCondicionesService;
 	@EJB
 	private TipoTarifaService tipoTarifaService;
+	@EJB
+	private TipoIdentificacionService tipoIdentificacionService;
+	@EJB
+	private PaisService paisService;
 
 	@PostConstruct
 	private void init() {
@@ -108,6 +126,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		fechaActual = new Date();
 		fechaSalida = new Date();
 		tabReserva = true;
+		tabPasajeros = false;
 		index = 0;
 		tablaCondicionesTarifaIda = false;
 		tablaCondicionesTarifaRegreso = false;
@@ -253,6 +272,11 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		return tarifaProductoService.obtenerCostoProductoTarifaCabina(codigoProductoSeleccionadoIda, codigoTipoCabina, tarifa);
 	}
 	
+	public Double obtenerCostoProductoTarifaCabinaRegreso(Integer tarifa)
+	{
+		return tarifaProductoService.obtenerCostoProductoTarifaCabina(codigoProductoSeleccionadoResgreso, codigoTipoCabina, tarifa);
+	}
+	
 	public void seleccionTarifaIda(Integer codigoTarifa)
 	{
 		reserva.setTipoTarifaIda(tipoTarifaService.obtenerXId(codigoTarifa));
@@ -286,6 +310,45 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		reserva.setProductoRetornoRs(productoService.obtenerXId(codigoProductoSeleccionadoResgreso));
 		tablaCondicionesTarifaRegreso = false;
 		panelResumenVueloRegreso = true;
+	}
+	
+	public void continuarTabSeccion()
+	{
+		listaPasajeros = new ArrayList<>();
+		tabSeleccion = false;
+		tabPasajeros = true;
+		index = 2;
+		tipoIdentificaciones = tipoIdentificacionService.obtenerTipoIdentificacion();
+		paises = paisService.obtenerPaises();
+		for(TipoPasajero tp : tipoPasajeros)
+		{
+			if(tp.getNumeroPasajeros() > 0)
+			{
+				for(int i = 0; i<tp.getNumeroPasajeros(); i++)
+				{
+					Pasajero pasajero = new Pasajero();
+					pasajero.setTipoPasajero(tp);
+					pasajero.setNumeroPasajero(i + 1);
+					listaPasajeros.add(pasajero);
+				}
+				
+			}
+		}
+	}
+	
+	public void continuarTabPasajeros()
+	{
+		for(Pasajero p : listaPasajeros)
+		{
+			System.out.println("nombre: "+p.getNombrePs());
+			System.out.println("apellido: "+p.getApellidoPs());
+			System.out.println("codigo tipo identificacion: "+p.getCodigoTipoIdentificacion());
+			System.out.println("identificacion: "+p.getIdentifiacionPs());
+			System.out.println("correo: "+p.getCorreoPs());
+		}
+		tabPasajeros = false;
+		tabPago = true;
+		index = 3;
 	}
 	
 	public Reserva getReserva() {
@@ -568,6 +631,76 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setPanelResumenVueloRegreso(boolean panelResumenVueloRegreso) {
 		this.panelResumenVueloRegreso = panelResumenVueloRegreso;
+	}
+
+
+	public boolean isTabPasajeros() {
+		return tabPasajeros;
+	}
+
+
+	public void setTabPasajeros(boolean tabPasajeros) {
+		this.tabPasajeros = tabPasajeros;
+	}
+
+
+	public List<Pasajero> getListaPasajeros() {
+		return listaPasajeros;
+	}
+
+
+	public void setListaPasajeros(List<Pasajero> listaPasajeros) {
+		this.listaPasajeros = listaPasajeros;
+	}
+
+
+	public List<TipoIdentificacion> getTipoIdentificaciones() {
+		return tipoIdentificaciones;
+	}
+
+
+	public void setTipoIdentificaciones(List<TipoIdentificacion> tipoIdentificaciones) {
+		this.tipoIdentificaciones = tipoIdentificaciones;
+	}
+
+
+	public Integer getCodigoTipoIdentificacion() {
+		return codigoTipoIdentificacion;
+	}
+
+
+	public void setCodigoTipoIdentificacion(Integer codigoTipoIdentificacion) {
+		this.codigoTipoIdentificacion = codigoTipoIdentificacion;
+	}
+
+
+	public List<Pais> getPaises() {
+		return paises;
+	}
+
+
+	public void setPaises(List<Pais> paises) {
+		this.paises = paises;
+	}
+
+
+	public Integer getCodigoPais() {
+		return codigoPais;
+	}
+
+
+	public void setCodigoPais(Integer codigoPais) {
+		this.codigoPais = codigoPais;
+	}
+
+
+	public boolean isTabPago() {
+		return tabPago;
+	}
+
+
+	public void setTabPago(boolean tabPago) {
+		this.tabPago = tabPago;
 	}
 
 }

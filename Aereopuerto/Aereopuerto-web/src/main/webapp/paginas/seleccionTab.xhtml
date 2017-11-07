@@ -16,12 +16,13 @@
 							</p:repeat>
 							</p:column>
 							<p:column width="20%">
-								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
-								disabled="#{reservaControlador.seleccionTarifaVueloIda}" update="formReserva:tabViewId"/>
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloIda(producto.codigoPo)}" process=":formReserva:tabViewId:vuelosIdaId"
+								disabled="#{reservaControlador.seleccionTarifaVueloIda}" update=":formReserva:tabViewId:panelTarifaIdaId,:formReserva:tabViewId:vuelosIdaId"/>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
-					<p:panel id="condicionesTarifaId" rendered="#{reservaControlador.tablaCondicionesTarifaIda}" header="Tarifa">
+					<h:panelGrid id="panelTarifaIdaId">
+						<p:panel id="condicionesTarifaId" rendered="#{reservaControlador.tablaCondicionesTarifaIda}" header="Tarifa">
 						<p:dataTable value="#{reservaControlador.listaCondiciones}" var="condiciones" reflow="true" id="tablaTarifaCondicionId"
 							emptyMessage="No existen resutlados">
 							<p:column>
@@ -43,9 +44,11 @@
 										</p:columns>
 						</p:dataTable>
 						
-						<p:commandButton update=":formReserva:tabViewId:seleccionId, condicionesTarifaId" process="formReserva:tabViewId:condicionesTarifaId"
+						<p:commandButton update=":formReserva:tabViewId:panelTarifaIdaId,:formReserva:tabViewId:vuelosIdaId" process=":formReserva:tabViewId:condicionesTarifaId"
 						action="#{reservaControlador.cancelarSeleccionTarifa()}" value="Cerrar"/>		
-					</p:panel>	
+					</p:panel>
+					</h:panelGrid>
+						
 					<p:panel header="Itinerario Ida" id="resumenIdaId" rendered="#{reservaControlador.panelResumenVueloIda}">
 						<p:dataTable value="#{reservaControlador.reserva.productoIdaRs}" var="producto">
 							<p:column>
@@ -71,36 +74,39 @@
 							</p:repeat>
 							</p:column>
 							<p:column width="20%">
-								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloRegreo(producto.codigoPo)}" process=":formReserva:tabViewId:seleccionId"
-								disabled="#{reservaControlador.seleccionTarifaVueloRegreso}" update="formReserva:tabViewId"/>
+								<p:commandLink value="Desde: $#{reservaControlador.obtenerCostoMinimo(producto.codigoPo)}" action="#{reservaControlador.seleccionVueloRegreo(producto.codigoPo)}" process=":formReserva:tabViewId:vuelosRegresoId"
+								disabled="#{reservaControlador.seleccionTarifaVueloRegreso}" update=":formReserva:tabViewId:panelTarifasRegresoId,:formReserva:tabViewId:vuelosRegresoId"/>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
-					<p:panel id="condicionesTarifaRegresoId" rendered="#{reservaControlador.tablaCondicionesTarifaRegreso}" header="Tarifa Regreso">
-						<p:dataTable value="#{reservaControlador.listaCondicionesRegreso}" var="condiciones" reflow="true" id="tablaTarifaCondicionRegresoId"
+					<h:panelGrid id="panelTarifasRegresoId">
+						<p:panel id="condicionesTarifaRegresoId" rendered="#{reservaControlador.tablaCondicionesTarifaRegreso}" header="Tarifa Regreso">
+						<p:dataTable value="#{reservaControlador.listaCondicionesRegreso}" var="condicionesR" reflow="true" id="tablaTarifaCondicionRegresoId"
 							emptyMessage="No existen resutlados">
 							<p:column>
-								<h:outputText value="#{condiciones.nombreCo}"  rendered="#{condiciones.codigoCo != 7}"/>
+								<h:outputText value="#{condicionesR.nombreCo}"  rendered="#{condicionesR.codigoCo != 7}"/>
 							</p:column>
 							
-							<p:columns var="tarifa"
+							<p:columns var="tarifaR"
 											value="#{reservaControlador.listaTarifaProductoRegreso}">
 											<f:facet name="header">
-												<h:outputText value="#{tarifa.tipoTarifa.nombreTt}" />
+												<h:outputText value="#{tarifaR.tipoTarifa.nombreTt}" />
 											</f:facet>
 											<center>
 												
-												<h:outputText rendered="#{condiciones.codigoCo != 7}"
-													value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifa.tipoTarifa.codigoTt,condiciones.codigoCo)}" />
-												<h:commandLink style="font-size: 30px !important" rendered="#{condiciones.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabina(tarifa.tipoTarifa.codigoTt)}" 
-												action="#{reservaControlador.seleccionTarifaRegreso(tarifa.tipoTarifa.codigoTt)}" update=":formReserva:tabViewId:seleccionId, condicionesTarifaRegresoId" process="formReserva:tabViewId:condicionesTarifaRegresoId"/>	
+												<h:outputText rendered="#{condicionesR.codigoCo != 7}"
+													value="#{reservaControlador.obtenerDescripcionTarifaCondicion(tarifaR.tipoTarifa.codigoTt,condicionesR.codigoCo)}" />
+												<h:commandLink style="font-size: 30px !important" rendered="#{condicionesR.codigoCo == 7}" value="#{reservaControlador.obtenerCostoProductoTarifaCabinaRegreso(tarifaR.tipoTarifa.codigoTt)}" 
+												action="#{reservaControlador.seleccionTarifaRegreso(tarifaR.tipoTarifa.codigoTt)}" update=":formReserva:tabViewId:panelTarifasRegresoId,:formReserva:tabViewId:vuelosRegresoId" process=":formReserva:tabViewId:condicionesTarifaRegresoId"/>	
 											</center>
 										</p:columns>
 						</p:dataTable>
 						
-						<p:commandButton update=":formReserva:tabViewId:seleccionId, condicionesTarifaRegresoId" process="formReserva:tabViewId:condicionesTarifaRegresoId"
+						<p:commandButton update=":formReserva:tabViewId:panelTarifasRegresoId,:formReserva:tabViewId:vuelosRegresoId" process=":formReserva:tabViewId:condicionesTarifaRegresoId"
 						action="#{reservaControlador.cancelarSeleccionTarifaRegreso()}" value="Cerrar"/>		
-					</p:panel>	
+					</p:panel>
+					</h:panelGrid>
+					<div class="nk-gap"></div>
 					<p:panel header="Itinerario Regreso" id="resumenRegresoId" rendered="#{reservaControlador.panelResumenVueloRegreso}">
 						<p:dataTable value="#{reservaControlador.reserva.productoRetornoRs}" var="producto">
 							<p:column>
@@ -114,4 +120,9 @@
 							</p:column>
 						</p:dataTable>
 					</p:panel>
+					<div class="nk-gap"></div>
+					<p:panel id="panelContinuarId" style="border-style:hidden !important">
+						<p:commandButton process="@this" update=":formReserva:tabViewId" value="Continuar" action="#{reservaControlador.continuarTabSeccion()}" rendered="#{reservaControlador.panelResumenVueloIda and ((reservaControlador.codigoTipoReserva == 1 and reservaControlador.panelResumenVueloRegreso) or (reservaControlador.codigoTipoReserva != 1))}"/>
+					</p:panel>
+					
 </ui:composition>

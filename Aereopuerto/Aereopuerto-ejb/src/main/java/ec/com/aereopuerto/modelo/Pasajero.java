@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -101,6 +102,12 @@ public class Pasajero implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
     private List<ContactoPasajero> contactoPasajeroList;
 
+    @Transient
+    private Integer numeroPasajero;
+    
+    @Transient
+    private Integer codigoTipoIdentificacion;
+    
     public Pasajero() {
     }
 
@@ -225,7 +232,23 @@ public class Pasajero implements Serializable {
         this.contactoPasajeroList = contactoPasajeroList;
     }
 
-    @Override
+    public Integer getNumeroPasajero() {
+		return numeroPasajero;
+	}
+
+	public void setNumeroPasajero(Integer numeroPasajero) {
+		this.numeroPasajero = numeroPasajero;
+	}
+
+	public Integer getCodigoTipoIdentificacion() {
+		return codigoTipoIdentificacion;
+	}
+
+	public void setCodigoTipoIdentificacion(Integer codigoTipoIdentificacion) {
+		this.codigoTipoIdentificacion = codigoTipoIdentificacion;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (codigoPs != null ? codigoPs.hashCode() : 0);
