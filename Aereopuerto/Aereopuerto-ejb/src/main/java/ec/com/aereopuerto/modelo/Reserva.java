@@ -57,8 +57,6 @@ public class Reserva implements Serializable {
     @Column(name = "fecha_salida")
     @Temporal(TemporalType.DATE)
     private Date fechaSalida;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "fecha_retorno")
     @Temporal(TemporalType.DATE)
     private Date fechaRetorno;
@@ -81,6 +79,8 @@ public class Reserva implements Serializable {
     @Column(name = "fecha_act_rs")
     @Temporal(TemporalType.DATE)
     private Date fechaActRs;
+    @Column(name = "costo_total_rs")
+    private Double costoTotalRs;
     @JoinColumn(name = "producto_ida_rs", referencedColumnName = "codigo_po")
     @ManyToOne(optional = false)
     private Producto productoIdaRs;
@@ -107,6 +107,8 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "tipo_tarifa_regreso", referencedColumnName = "codigo_tt")
     @ManyToOne(optional = false)
     private TipoTarifa tipoTarifaRegreso;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reserva")
+    private List<PasajeroCosto> pasajeroCosto;
     
 
     public Reserva() {
@@ -278,6 +280,22 @@ public class Reserva implements Serializable {
 
 	public void setTipoTarifaRegreso(TipoTarifa tipoTarifaRegreso) {
 		this.tipoTarifaRegreso = tipoTarifaRegreso;
+	}
+
+	public List<PasajeroCosto> getPasajeroCosto() {
+		return pasajeroCosto;
+	}
+
+	public void setPasajeroCosto(List<PasajeroCosto> pasajeroCosto) {
+		this.pasajeroCosto = pasajeroCosto;
+	}
+
+	public Double getCostoTotalRs() {
+		return costoTotalRs;
+	}
+
+	public void setCostoTotalRs(Double costoTotalRs) {
+		this.costoTotalRs = costoTotalRs;
 	}
     
 }

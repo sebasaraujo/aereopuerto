@@ -40,9 +40,13 @@
 			</p:tab>
 		</p:accordionPanel>
 		<div class="nk-gap"></div>
-					<p:panel id="panelContinuarPasajeroId" style="border-style:hidden !important">
-						<p:commandButton update=":formReserva:tabViewId" process=":formReserva:tabViewId:pasajerosId" value="Continuar" action="#{reservaControlador.continuarTabPasajeros()}" rendered="#{reservaControlador.panelResumenVueloIda and ((reservaControlador.codigoTipoReserva == 1 and reservaControlador.panelResumenVueloRegreso) or (reservaControlador.codigoTipoReserva != 1))}"/>
-					</p:panel>
+		<p:panel id="panelContinuarPasajeroId"
+			style="border-style:hidden !important">
+			<p:commandButton update=":formReserva:tabViewId"
+				process=":formReserva:tabViewId:pasajerosId" value="Continuar"
+				action="#{reservaControlador.continuarTabPasajeros()}"
+				rendered="#{reservaControlador.panelResumenVueloIda and ((reservaControlador.codigoTipoReserva == 1 and reservaControlador.panelResumenVueloRegreso) or (reservaControlador.codigoTipoReserva != 1))}" />
+		</p:panel>
 	</p:panel>
 
 

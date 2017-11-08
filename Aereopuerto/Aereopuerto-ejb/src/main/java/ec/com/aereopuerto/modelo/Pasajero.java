@@ -101,6 +101,8 @@ public class Pasajero implements Serializable {
     private TipoPasajero tipoPasajero;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
     private List<ContactoPasajero> contactoPasajeroList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
+    private List<PasajeroCosto> pasajeroCosto;
 
     @Transient
     private Integer numeroPasajero;
@@ -246,6 +248,14 @@ public class Pasajero implements Serializable {
 
 	public void setCodigoTipoIdentificacion(Integer codigoTipoIdentificacion) {
 		this.codigoTipoIdentificacion = codigoTipoIdentificacion;
+	}
+
+	public List<PasajeroCosto> getPasajeroCosto() {
+		return pasajeroCosto;
+	}
+
+	public void setPasajeroCosto(List<PasajeroCosto> pasajeroCosto) {
+		this.pasajeroCosto = pasajeroCosto;
 	}
 
 	@Override

@@ -68,6 +68,8 @@ public class TipoPasajero implements Serializable {
     @Column(name = "fecha_act_tp")
     @Temporal(TemporalType.DATE)
     private Date fechaActTp;
+    @Column(name = "porcentaje_tarifa_tp")
+    private Double porcentajeTarifaTp;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoPasajero")
     private List<Pasajero> pasajeroList;
 
@@ -144,6 +146,14 @@ public class TipoPasajero implements Serializable {
 
 	public void setNumeroPasajeros(Integer numeroPasajeros) {
 		this.numeroPasajeros = numeroPasajeros;
+	}
+
+	public Double getPorcentajeTarifaTp() {
+		return porcentajeTarifaTp;
+	}
+
+	public void setPorcentajeTarifaTp(Double porcentajeTarifaTp) {
+		this.porcentajeTarifaTp = porcentajeTarifaTp;
 	}
 
 	@Override

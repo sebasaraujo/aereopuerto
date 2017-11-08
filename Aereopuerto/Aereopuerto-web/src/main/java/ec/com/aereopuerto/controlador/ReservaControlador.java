@@ -14,10 +14,13 @@ import javax.inject.Named;
 
 import org.primefaces.event.SelectEvent;
 
+import ec.com.aereopuerto.enumeradores.EstadoEnum;
 import ec.com.aereopuerto.modelo.Aereopuerto;
 import ec.com.aereopuerto.modelo.Condiciones;
+import ec.com.aereopuerto.modelo.Impuesto;
 import ec.com.aereopuerto.modelo.Pais;
 import ec.com.aereopuerto.modelo.Pasajero;
+import ec.com.aereopuerto.modelo.PasajeroCosto;
 import ec.com.aereopuerto.modelo.Producto;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.TarifaCondiciones;
@@ -28,8 +31,10 @@ import ec.com.aereopuerto.modelo.TipoPasajero;
 import ec.com.aereopuerto.modelo.TipoReserva;
 import ec.com.aereopuerto.service.local.AereopuertoService;
 import ec.com.aereopuerto.service.local.CondicionesService;
+import ec.com.aereopuerto.service.local.ImpuestoService;
 import ec.com.aereopuerto.service.local.PaisService;
 import ec.com.aereopuerto.service.local.ProductoService;
+import ec.com.aereopuerto.service.local.ReservaService;
 import ec.com.aereopuerto.service.local.TarifaCondicionesService;
 import ec.com.aereopuerto.service.local.TarifaProductoService;
 import ec.com.aereopuerto.service.local.TipoCabinaService;
@@ -87,7 +92,10 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private Integer codigoTipoIdentificacion;
 	private List<Pais> paises = new ArrayList<>();
 	private Integer codigoPais;
+	
+	//Variables seccion pago
 	private boolean tabPago = false;
+	private List<PasajeroCosto> pasajerosCosto = new ArrayList<>();
 	
 	@EJB
 	private TipoReservaService tipoReservaService;
@@ -111,6 +119,10 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private TipoIdentificacionService tipoIdentificacionService;
 	@EJB
 	private PaisService paisService;
+	@EJB
+	private ImpuestoService impuestoService;
+	@EJB
+	private ReservaService reservaService;
 
 	@PostConstruct
 	private void init() {
@@ -281,6 +293,8 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	{
 		reserva.setTipoTarifaIda(tipoTarifaService.obtenerXId(codigoTarifa));
 		reserva.setProductoIdaRs(productoService.obtenerXId(codigoProductoSeleccionadoIda));
+		reserva.setDesdeRs(reserva.getProductoIdaRs().getAereopuertoSalida());
+		reserva.setHaciaRs(reserva.getProductoIdaRs().getAereopuertoLlegada());
 		tablaCondicionesTarifaIda = false;
 		panelResumenVueloIda = true;
 		if(codigoTipoReserva.equals(Constantes.TIPO_RESERVA_IDA_VUELTA))
@@ -346,9 +360,70 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 			System.out.println("identificacion: "+p.getIdentifiacionPs());
 			System.out.println("correo: "+p.getCorreoPs());
 		}
+		calcularCosto();
 		tabPasajeros = false;
 		tabPago = true;
 		index = 3;
+		
+	}
+	
+	public void calcularCosto()
+	{
+		try {
+			if(tabPasajeros)
+			{
+				pasajerosCosto = new ArrayList<>();
+				List<Impuesto> impuestos = impuestoService.obtenerTodos();
+				Double tarifaIda = obtenerCostoProductoTarifaCabina(reserva.getTipoTarifaIda().getCodigoTt());
+				Double tarifaRegreso = 0.0;
+				if(reserva.getTipoTarifaRegreso() != null)
+					tarifaRegreso = obtenerCostoProductoTarifaCabinaRegreso(reserva.getTipoTarifaRegreso().getCodigoTt());
+				Double tarifaBase = tarifaIda + tarifaRegreso;
+				Double total = 0.0;
+				for(Pasajero pasajero : listaPasajeros)
+				{
+					Double tarifa = (pasajero.getTipoPasajero().getPorcentajeTarifaTp() * tarifaBase)/100;
+					Double impuesto = 0.0;
+					for(Impuesto i : impuestos)
+					{
+						if(i.getTipoImpuesto().getCodigoTi().equals(Constantes.TIPO_IMPUESTO_FIJO))
+						{
+							impuesto += i.getValorIm();
+						}
+						else if(i.getTipoImpuesto().getCodigoTi().equals(Constantes.TIPO_IMPUESTO_PORCENTUAL))
+						{
+							impuesto += ((tarifa * i.getValorIm()) / 100);
+						}
+					}
+					total += tarifa + impuesto;
+					PasajeroCosto pasajeroCosto = new PasajeroCosto();
+					pasajeroCosto.setImpuestoPc(impuesto);
+					pasajeroCosto.setTarifaPc(tarifa);
+					pasajeroCosto.setPasajero(pasajero);
+					pasajeroCosto.setReserva(reserva);
+					pasajerosCosto.add(pasajeroCosto);
+				}
+				reserva.setCostoTotalRs(total);
+			}
+		} catch (Exception e) {
+		}
+		
+		
+	}
+	
+	public void finalizarReserva()
+	{
+		try {
+			System.out.println("hacia rs: "+reserva.getHaciaRs());
+			reserva.setEstadoRs(EstadoEnum.ACTIVO.getValor());
+			reserva.setFechaActRs(new Date());
+			reserva.setNumeroRs("RES001");
+			reserva.setUsuarioActRs(1);
+			reservaService.crear(reserva);
+			agregarMensajeInformacion("Reserva / Compra realizada satisfactoriamente", "Reserva / Compra realizada satisfactoriamente");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Reserva getReserva() {
@@ -701,6 +776,16 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setTabPago(boolean tabPago) {
 		this.tabPago = tabPago;
+	}
+
+
+	public List<PasajeroCosto> getPasajerosCosto() {
+		return pasajerosCosto;
+	}
+
+
+	public void setPasajerosCosto(List<PasajeroCosto> pasajerosCosto) {
+		this.pasajerosCosto = pasajerosCosto;
 	}
 
 }
