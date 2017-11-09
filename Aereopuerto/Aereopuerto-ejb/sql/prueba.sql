@@ -5,7 +5,7 @@
 -- Dumped from database version 9.6.3
 -- Dumped by pg_dump version 9.6.3
 
--- Started on 2017-11-08 16:54:19
+-- Started on 2017-11-09 11:35:40
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -422,7 +422,7 @@ CREATE TABLE pasajero (
     identifiacion_ps character varying(20) NOT NULL,
     correo_ps character varying(100) NOT NULL,
     tipo_identificacion integer NOT NULL,
-    direccion integer NOT NULL,
+    direccion integer,
     estado_ps character varying(1) NOT NULL,
     usuario_act_ps integer NOT NULL,
     fecha_act_ps date NOT NULL,
@@ -1625,6 +1625,12 @@ SELECT pg_catalog.setval('pais_codigo_pa_seq', 1, true);
 --
 
 COPY pasajero (codigo_ps, nombre_ps, apellido_ps, identifiacion_ps, correo_ps, tipo_identificacion, direccion, estado_ps, usuario_act_ps, fecha_act_ps, tipo_pasajero) FROM stdin;
+3	Sebastian	Araujo	1723723092	sebasaraujo23@gmail.com	2	\N	A	1	2017-11-09	1
+4	Sebastian	Araujo	1723723092	sebasaraujo23@gmail.com	2	\N	A	1	2017-11-09	1
+5	Sebastian	Araujo	1723723092	sebasaraujo23@gmail.com	2	\N	A	1	2017-11-09	1
+6	Catalina	Parra	1707424329	cata.parra@hotmail.com	2	\N	A	1	2017-11-09	1
+7	Maria	Araujo	17234567891	majo@gmail.com	2	\N	A	1	2017-11-09	2
+8	Cesar	Araujo	1705924692	cesar@gmail.com	2	\N	A	1	2017-11-09	3
 \.
 
 
@@ -1634,7 +1640,7 @@ COPY pasajero (codigo_ps, nombre_ps, apellido_ps, identifiacion_ps, correo_ps, t
 -- Name: pasajero_codigo_ps_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('pasajero_codigo_ps_seq', 1, false);
+SELECT pg_catalog.setval('pasajero_codigo_ps_seq', 8, true);
 
 
 --
@@ -1663,6 +1669,12 @@ SELECT pg_catalog.setval('pasajero_costo_codigo_pc_seq', 1, false);
 --
 
 COPY pasajero_reserva (codigo_pr, pasajero, reserva) FROM stdin;
+2	3	7
+3	4	8
+4	5	9
+5	6	9
+6	7	9
+7	8	9
 \.
 
 
@@ -1672,7 +1684,7 @@ COPY pasajero_reserva (codigo_pr, pasajero, reserva) FROM stdin;
 -- Name: pasajero_reserva_codigo_pr_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('pasajero_reserva_codigo_pr_seq', 1, false);
+SELECT pg_catalog.setval('pasajero_reserva_codigo_pr_seq', 7, true);
 
 
 --
@@ -1726,7 +1738,9 @@ SELECT pg_catalog.setval('producto_vuelo_codigo_pv_seq', 4, true);
 --
 
 COPY reserva (codigo_rs, desde_rs, hacia_rs, fecha_salida, fecha_retorno, numero_rs, producto_ida_rs, producto_retorno_rs, estado_rs, usuario_act_rs, fecha_act_rs, tipo_reserva, tipo_cabina, tipo_tarifa_ida, tipo_tarifa_regreso, costo_total_rs) FROM stdin;
-3	2	1	2017-11-10	2017-11-15	RES001	1	3	A	1	2017-11-08	1	1	3	3	276.60000000000002
+7	2	1	2017-11-10	2017-11-15	HHGPS	2	3	A	1	2017-11-09	1	1	1	1	202.5
+8	2	1	2017-11-10	\N	WPRKR	2	\N	A	1	2017-11-09	2	1	2	\N	139.80000000000001
+9	2	1	2017-11-10	\N	XQUGV	2	\N	A	1	2017-11-09	2	1	2	\N	366.31200000000001
 \.
 
 
@@ -1736,7 +1750,7 @@ COPY reserva (codigo_rs, desde_rs, hacia_rs, fecha_salida, fecha_retorno, numero
 -- Name: reserva_codigo_rs_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('reserva_codigo_rs_seq', 3, true);
+SELECT pg_catalog.setval('reserva_codigo_rs_seq', 9, true);
 
 
 --
@@ -2636,7 +2650,7 @@ ALTER TABLE ONLY vuelo
     ADD CONSTRAINT vuelo_fk4 FOREIGN KEY (aereopuerto_llegada) REFERENCES aereopuerto(codigo_ae);
 
 
--- Completed on 2017-11-08 16:54:20
+-- Completed on 2017-11-09 11:35:40
 
 --
 -- PostgreSQL database dump complete

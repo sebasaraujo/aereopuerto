@@ -26,6 +26,9 @@
 				<p:tab id="pagoId" title="Pago" disabled="#{!reservaControlador.tabPago}">
 					<ui:include src="/paginas/pagoTab.xhtml" />
 				</p:tab>
+				<p:tab id="resumenId" title="Resumen" disabled="#{!reservaControlador.tabResumen}">
+					<ui:include src="/paginas/resumenTab.xhtml" />
+				</p:tab>
 			</p:tabView>
 		</h:form>
 	</ui:define>

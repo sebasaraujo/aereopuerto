@@ -19,4 +19,10 @@ public class ReservaServiceImpl implements ReservaService{
 		reservaFacade.create(reserva);
 	}
 	
+	@Override
+    public boolean validarNumeroReserva(String numero)
+    {
+		return reservaFacade.validarNumeroReserva(numero);
+    }
+	
 }

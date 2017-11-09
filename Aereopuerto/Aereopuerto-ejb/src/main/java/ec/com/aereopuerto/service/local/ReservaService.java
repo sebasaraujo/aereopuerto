@@ -13,4 +13,11 @@ public interface ReservaService {
 	 */
 	void crear(Reserva reserva);
 
+	/**
+	 * Metodo que valida si exixte el numero de reserva
+	 * @param numero
+	 * @return
+	 */
+	boolean validarNumeroReserva(String numero);
+
 }

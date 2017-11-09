@@ -19,7 +19,7 @@ START: Navbar
 					class="nk-navbar nk-navbar-top nk-navbar-sticky nk-navbar-transparent nk-navbar-white-text-on-top">
 					<div class="container">
 						<div class="nk-nav-table">
-							<a href="#{request.contextPath}/faces/paginas/principal.xhtml" class="nk-nav-logo"> <img
+							<a href="#{request.contextPath}/faces/paginas/reserva.xhtml" class="nk-nav-logo"> <img
 								src="#{request.contextPath}/assets/images/logo-light.svg" alt=""
 								width="85" class="nk-nav-logo-onscroll" /> <img
 								src="#{request.contextPath}/assets/images/logo.svg" alt=""
@@ -29,19 +29,11 @@ START: Navbar
 							<ul class="nk-nav nk-nav-right hidden-md-down"
 								data-nav-mobile="#nk-nav-mobile">
 								<li><a
-									href="#{request.contextPath}/faces/paginas/principal.xhtml#about">Somos</a></li>
+									href="#{request.contextPath}/faces/paginas/principal.xhtml">Somos</a></li>
 								<li><a
-									href="#{request.contextPath}/faces/paginas/principal.xhtmll#contact">Contacto</a></li>
-								<li><h:panelGroup
-										rendered="#{!sesionControlador.logueoCorrecto}">
-										<a href="#{request.contextPath}/faces/paginas/login.xhtml">Inicio
-											sesión</a>
-									</h:panelGroup> 
-									<h:panelGroup rendered="#{sesionControlador.logueoCorrecto}">
-										<h:commandLink value="Cerrar sesión">
-											<f:ajax listener="#{sesionControlador.cerrarSesion()}" />
-										</h:commandLink>
-									</h:panelGroup></li>
+									href="#{request.contextPath}/faces/paginas/principal.xhtml">Contacto</a></li>
+								<li><a
+									href="#{request.contextPath}/faces/paginas/reserva.xhtml">Planea tu viaje</a></li>
 
 							</ul>
 

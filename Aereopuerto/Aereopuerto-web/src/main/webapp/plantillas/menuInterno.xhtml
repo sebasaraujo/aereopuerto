@@ -12,28 +12,22 @@
 		<h:form>
 
 
-			<div class="nk-header nk-header-opaque">
+			<div class="nk-header nk-header-opaque" style="background-color: #ebebeb !important">
 
 				<div class="nk-navbar nk-navbar-top">
 					<div class="container">
 						<div class="nk-nav-table">
-							<a href="#{request.contextPath}/faces/paginas/principal.xhtml"
-								class="nk-nav-logo"> <img
-								src="#{request.contextPath}/assets/images/logo-light.svg" alt=""
-								width="85" class="nk-nav-logo-onscroll" /> <img
-								src="#{request.contextPath}/assets/images/logo.svg" alt=""
-								width="85" />
-							</a>
+<!-- 							<a href="#{request.contextPath}/faces/paginas/reserva.xhtml" -->
+<!-- 								class="nk-nav-logo"> <img -->
+<!-- 								src="#{request.contextPath}/css/images/avion.png" alt="" -->
+<!-- 								width="60" class="nk-nav-logo-onscroll" /> <img -->
+<!-- 								src="#{request.contextPath}/css/images/avion.png" alt="" -->
+<!-- 								width="60" /> -->
+<!-- 							</a> -->
 
 							<ul class="nk-nav nk-nav-right">
-								<li> <h:outputLabel styleClass="text-usuario-sesion" value="Bienvenido a Justec
-										#{sesionControlador.nombreUsuario}" />
+								<li> <h:outputLabel styleClass="text-usuario-sesion" style="font-size:25px !important" value="Bienvenido, empieza a planear tus vacaciones!" />
 								</li>
-								<li>
-								<p:commandButton
-										action="#{sesionControlador.cerrarSesion()}"
-										value="Cerrar sesión" styleClass="text-boton-menu-interno">
-									</p:commandButton></li>
 							</ul>
 
 

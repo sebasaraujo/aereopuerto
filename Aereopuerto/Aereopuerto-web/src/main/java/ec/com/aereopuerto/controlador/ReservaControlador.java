@@ -21,6 +21,7 @@ import ec.com.aereopuerto.modelo.Impuesto;
 import ec.com.aereopuerto.modelo.Pais;
 import ec.com.aereopuerto.modelo.Pasajero;
 import ec.com.aereopuerto.modelo.PasajeroCosto;
+import ec.com.aereopuerto.modelo.PasajeroReserva;
 import ec.com.aereopuerto.modelo.Producto;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.TarifaCondiciones;
@@ -33,6 +34,8 @@ import ec.com.aereopuerto.service.local.AereopuertoService;
 import ec.com.aereopuerto.service.local.CondicionesService;
 import ec.com.aereopuerto.service.local.ImpuestoService;
 import ec.com.aereopuerto.service.local.PaisService;
+import ec.com.aereopuerto.service.local.PasajeroReservaService;
+import ec.com.aereopuerto.service.local.PasajeroService;
 import ec.com.aereopuerto.service.local.ProductoService;
 import ec.com.aereopuerto.service.local.ReservaService;
 import ec.com.aereopuerto.service.local.TarifaCondicionesService;
@@ -97,6 +100,9 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private boolean tabPago = false;
 	private List<PasajeroCosto> pasajerosCosto = new ArrayList<>();
 	
+	//Variables seccion resumen
+	private boolean tabResumen = false;
+	
 	@EJB
 	private TipoReservaService tipoReservaService;
 	@EJB
@@ -123,6 +129,10 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	private ImpuestoService impuestoService;
 	@EJB
 	private ReservaService reservaService;
+	@EJB
+	private PasajeroService pasajeroService;
+	@EJB
+	private PasajeroReservaService pasajeroReservaService;
 
 	@PostConstruct
 	private void init() {
@@ -139,6 +149,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		fechaSalida = new Date();
 		tabReserva = true;
 		tabPasajeros = false;
+		tabResumen = false;
 		index = 0;
 		tablaCondicionesTarifaIda = false;
 		tablaCondicionesTarifaRegreso = false;
@@ -161,7 +172,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 		for (int i = 0; i < allAereopuertos.size(); i++) {
 			Aereopuerto aereopuerto = allAereopuertos.get(i);
-			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query)) {
+			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query.toLowerCase())) {
 				filteredAereopuertos.add(aereopuerto);
 			}
 		}
@@ -183,7 +194,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 		for (int i = 0; i < allAereopuertos.size(); i++) {
 			Aereopuerto aereopuerto = allAereopuertos.get(i);
-			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query)) {
+			if (aereopuerto.getNemonicoAe().toLowerCase().startsWith(query.toLowerCase())) {
 				filteredAereopuertos.add(aereopuerto);
 			}
 		}
@@ -226,11 +237,12 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void buscar ()
 	{
-		System.out.println("tipo cabina: "+codigoTipoCabina);
 		listaProductosIda = productoService.obtenerProductosBusqueda(aereopuertoDesde.getCodigoAe(), aereopuertoHacia.getCodigoAe(), fechaSalida, codigoTipoCabina);
 		listaProductosRegreso = productoService.obtenerProductosBusqueda(aereopuertoHacia.getCodigoAe(), aereopuertoDesde.getCodigoAe(), fechaRetorno, codigoTipoCabina);
 		tabSeleccion = true;
 		tabReserva = false;
+		tabPago = false;
+		tabResumen = false;
 		index = 1;
 		seleccionTarifaVueloIda = false;
 		tablaCondicionesTarifaIda = false;
@@ -242,6 +254,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		reserva.setFechaRetorno(fechaRetorno);
 		reserva.setTipoReserva(tipoReservaService.obtenerXId(codigoTipoReserva));
 		reserva.setTipoCabina(tipoCabinaService.obtenerXId(codigoTipoCabina));
+		agregarMensajeInformacion("Seleccione el vuelo que desea dando click en el costo.", "Seleccione el vuelo que desea dando click en el costo.");
 	}
 	
 	
@@ -274,7 +287,6 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void cancelarSeleccionTarifa()
 	{
-		System.out.println("cancelar");
 		seleccionTarifaVueloIda = false;
 		tablaCondicionesTarifaIda = false;
 	}
@@ -301,6 +313,7 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 		{
 			mostrarVuelosRegreso = true;
 		}
+		agregarMensajeInformacion("Seleccione la tarifa que desea dando click en el costo.", "Seleccione la tarifa que desea dando click en el costo.");
 	}
 	
 	public void seleccionVueloRegreo(Integer codigoProducto)
@@ -352,14 +365,6 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	
 	public void continuarTabPasajeros()
 	{
-		for(Pasajero p : listaPasajeros)
-		{
-			System.out.println("nombre: "+p.getNombrePs());
-			System.out.println("apellido: "+p.getApellidoPs());
-			System.out.println("codigo tipo identificacion: "+p.getCodigoTipoIdentificacion());
-			System.out.println("identificacion: "+p.getIdentifiacionPs());
-			System.out.println("correo: "+p.getCorreoPs());
-		}
 		calcularCosto();
 		tabPasajeros = false;
 		tabPago = true;
@@ -414,16 +419,70 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 	public void finalizarReserva()
 	{
 		try {
-			System.out.println("hacia rs: "+reserva.getHaciaRs());
-			reserva.setEstadoRs(EstadoEnum.ACTIVO.getValor());
-			reserva.setFechaActRs(new Date());
-			reserva.setNumeroRs("RES001");
-			reserva.setUsuarioActRs(1);
-			reservaService.crear(reserva);
+			crearReserva();
+			crearPasajeros();
+			crearPasajeroReserva();
+			tabResumen = true;
+			tabPago = false;
+			index = 4;
 			agregarMensajeInformacion("Reserva / Compra realizada satisfactoriamente", "Reserva / Compra realizada satisfactoriamente");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void crearPasajeros()
+	{
+		for(Pasajero p : listaPasajeros)
+		{
+			p.setEstadoPs(EstadoEnum.ACTIVO.getValor());
+			p.setFechaActPs(new Date());
+			p.setUsuarioActPs(1);
+			p.setTipoIdentificacion(tipoIdentificacionService.obtenerTipoIdentificacionXId(p.getCodigoTipoIdentificacion()));
+			pasajeroService.crear(p);
+		}
+	}
+	
+	public void crearReserva()
+	{
+		if(reserva.getCodigoRs() == null)
+		{
+			reserva.setEstadoRs(EstadoEnum.ACTIVO.getValor());
+			reserva.setFechaActRs(new Date());
+			String numeroReserva = generarNumeroReserva();
+			while(!reservaService.validarNumeroReserva(numeroReserva))
+			{
+				numeroReserva = generarNumeroReserva();
+			}
+			reserva.setNumeroRs(numeroReserva);
+			reserva.setUsuarioActRs(1);
+			reservaService.crear(reserva);
+		}
+	}
+	
+	public void crearPasajeroReserva()
+	{
+		for(Pasajero p : listaPasajeros)
+		{
+			PasajeroReserva pasajeroReserva = new PasajeroReserva();
+			pasajeroReserva.setPasajero(p);
+			pasajeroReserva.setReserva(reserva);
+			pasajeroReservaService.crear(pasajeroReserva);
+		}
+	}
+	
+	public String generarNumeroReserva()
+	{
+		String numero = "";
+		int num1 = 97;
+		int num2 = 122;
+		char c = 0;
+		for (int i=1; i<=5; i++){
+			int numAleatorio = (int)Math.floor(Math.random()*(num2 -num1)+num1);
+			c++;
+			numero += (char)numAleatorio;
+		}
+		return numero.toUpperCase();
 	}
 	
 	public Reserva getReserva() {
@@ -786,6 +845,16 @@ public class ReservaControlador extends BaseControlador implements Serializable 
 
 	public void setPasajerosCosto(List<PasajeroCosto> pasajerosCosto) {
 		this.pasajerosCosto = pasajerosCosto;
+	}
+
+
+	public boolean isTabResumen() {
+		return tabResumen;
+	}
+
+
+	public void setTabResumen(boolean tabResumen) {
+		this.tabResumen = tabResumen;
 	}
 
 }

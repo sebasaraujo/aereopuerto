@@ -4,8 +4,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-	
-		<p:panel header="Itinerario">
+		<div class="nk-gap"></div>
+		<p:panel header="!Estas lsito para viajar!" style="border-style : hidden !important; text-align:center">
+			<h:outputText value="Código de confirmación: #{reservaControlador.reserva.numeroRs}" style=" font-size: 30px; color: green;"/>
+		</p:panel>
+		<div class="nk-gap"></div>
+		<p:panel header="Viajeros" style="border-style : hidden !important;">
+			<p:dataTable value="#{reservaControlador.listaPasajeros}" var="pasajero">
+				<p:column headerText="Nombre">
+					<h:outputText value="#{pasajero.nombrePs} #{pasajero.apellidoPs}" />
+				</p:column>
+				<p:column headerText="Identificacion">
+					<h:outputText value="#{pasajero.identifiacionPs}" />
+				</p:column>
+				<p:column headerText="Correo">
+					<h:outputText value="#{pasajero.correoPs}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<div class="nk-gap"></div>
+		<p:panel header="Tus vuelos" style="border-style : hidden !important;">
 			<p:dataTable value="#{reservaControlador.reserva.productoIdaRs.productoVueloList}" var="productoVuelo" style="text-align: center">
 				<p:column headerText="Fecha">
 					<h:outputText value="#{productoVuelo.vuelo.fechaVu}" />
@@ -44,7 +62,7 @@
 			</p:dataTable>
 		</p:panel>
 		<div class="nk-gap"></div>
-		<p:panel header="Tarifa en dólares americanos">
+		<p:panel header="Desglose de la tarifa" style="border-style : hidden !important;">
 			<p:dataTable value="#{reservaControlador.pasajerosCosto}" var="pasajeroCosto" style="text-align: center" sortBy="#{pasajeroCosto.reserva.costoTotalRs}">
 				<p:column	headerText="Pasjero">
 					<h:outputText value="Pasajero #{pasajeroCosto.pasajero.tipoPasajero.nombreTp} n° #{pasajeroCosto.pasajero.numeroPasajero}"  />
@@ -60,7 +78,7 @@
 				</p:column>
 				<p:summaryRow>
 					 <p:column colspan="3" style="text-align:right">
-		                <h:outputText value="Total:" />
+		                <h:outputText value="Total Cobrado:" />
 		            </p:column>
 		            <p:column>
 		                <h:outputText value="#{reservaControlador.reserva.costoTotalRs}">
@@ -70,12 +88,4 @@
 				</p:summaryRow>
 			</p:dataTable>
 		</p:panel>
-		<div class="nk-gap"></div>
-		<p:panel id="panelContinuarPagoId" style="border-style:hidden !important">
-				<center><p:commandLink action="#{reservaControlador.finalizarReserva()}" update=":formReserva:tabViewId">
-					<p:graphicImage value="../css/images/pago.gif"/>
-				</p:commandLink></center>
-		</p:panel>
-
-
 </ui:composition>

@@ -29,5 +29,12 @@ public interface ReservaFacadeLocal {
     List<Reserva> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que valida si el numero de reserva ya existe
+     * @param numero
+     * @return
+     */
+	boolean validarNumeroReserva(String numero);
     
 }

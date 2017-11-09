@@ -15,4 +15,11 @@ public interface TipoIdentificacionService {
 	 */
 	List<TipoIdentificacion> obtenerTipoIdentificacion();
 
+	/**
+	 * Metodo que obtiene el tipo de identificacion x id
+	 * @param codigo
+	 * @return
+	 */
+	TipoIdentificacion obtenerTipoIdentificacionXId(Integer codigo);
+
 }

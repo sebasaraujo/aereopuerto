@@ -14,7 +14,7 @@
    width="193"
    height="75"
    viewBox="0 0 193 75"
-   sodipodi:docname="logo-light_2.svg"
+   sodipodi:docname="logo-light.svg"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)">
   <metadata
      id="metadata3705">
@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,14 +52,14 @@
      inkscape:current-layer="svg3699" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:74.49687195px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.86242151"
-     x="7.3951998"
-     y="55.93536"
+     style="font-style:normal;font-weight:normal;font-size:63.32369995px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.58309221;"
+     x="8.1848173"
+     y="48.097637"
      id="text3701"
-     transform="scale(0.93785965,1.0662576)"><tspan
+     transform="scale(0.88736058,1.1269376)"><tspan
        sodipodi:role="line"
        id="tspan3699"
-       x="7.3951998"
-       y="55.93536"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Forte;-inkscape-font-specification:Forte;stroke-width:1.86242151;fill:#ffffff">Justec</tspan></text>
+       x="8.1848173"
+       y="48.097637"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Forte;-inkscape-font-specification:Forte;fill:#ffffff;stroke-width:1.58309221;">Monky</tspan></text>
 </svg>

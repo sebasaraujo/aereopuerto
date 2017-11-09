@@ -53,27 +53,49 @@
 .nk-header {
 	z-index: 0;
 }
+
+.ui-widget-content {
+	background-color: #EEF1FC!important;
+}
+
+.ui-widget-header {
+	background-color: #CCD7FF!important;
+}
+
+.ui-state-default {
+	background-color: #CCD7FF!important;
+}
+
+.nk-navbar, .nk-navbar.nk-navbar-solid {
+	background: url(../../css/images/avion.jpg) no-repeat center;
+    background-size: cover;
+}
+
+.nk-blog-isotope .nk-blog-post {
+    padding: 25px 30px;
+    background-color: #f6f6f6;
+    box-shadow: none!important;
+}
 </style>
 
 </h:head>
 
 <body style="background-color: #ebebeb">
 
-<!-- 	<ui:insert name="menu"> -->
-<!-- 		<ui:include src="/plantillas/menu.xhtml" /> -->
-<!-- 	</ui:insert> -->
+	<ui:insert name="menu">
+		<ui:include src="/plantillas/menuInterno.xhtml" />
+	</ui:insert>
 
 
 	<div class="nk-main">
 
 		<!-- CONTENEDOR -->
 		<div class="row vertical-gap">
-			<div class="col-lg-2"
-				style="padding-left: 1%; background: #404a4e !important;">
+			  <div class="col-lg-1" style="padding-left: 1%;">
 				<!-- 				<ui:insert name="menu"> -->
 				<!-- 					<ui:include src="/plantillas/menuLateral.xhtml" /> -->
 				<!-- 				</ui:insert> -->
-			</div>
+			 </div>
 			<div class="col-lg-10">
 				<!-- PANEL DE ESTADO  -->
 				<p:ajaxStatus onstart="PF('statusDialog').show()"
@@ -87,7 +109,7 @@
 				<p:messages globalOnly="true" showDetail="true" autoUpdate="true"
 					closable="true" />
 				<div class="container">
-					<div class="nk-gap"></div>
+<!-- 					<div class="nk-gap"></div> -->
 					<div class="nk-blog-isotope ">
 						<div class="nk-isotope-item">
 							<div class="nk-blog-post">

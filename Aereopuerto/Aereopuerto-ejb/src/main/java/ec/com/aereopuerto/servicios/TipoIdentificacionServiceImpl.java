@@ -19,5 +19,11 @@ public class TipoIdentificacionServiceImpl implements TipoIdentificacionService 
 	public List<TipoIdentificacion> obtenerTipoIdentificacion() {
 		return tipoIdentificacionFacade.obtenerTipoIdentificacion();
 	}
+	
+	@Override
+	public TipoIdentificacion obtenerTipoIdentificacionXId(Integer codigo)
+	{
+		return tipoIdentificacionFacade.find(codigo);
+	}
 
 }
