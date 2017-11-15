@@ -4,13 +4,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-		<div class="nk-gap"></div>
-		<p:panel header="!Estas lsito para viajar!" style="border-style : hidden !important; text-align:center">
-			<h:outputText value="Código de confirmación: #{reservaControlador.reserva.numeroRs}" style=" font-size: 30px; color: green;"/>
-		</p:panel>
-		<div class="nk-gap"></div>
-		<p:panel header="Viajeros" style="border-style : hidden !important;">
-			<p:dataTable value="#{reservaControlador.listaPasajeros}" var="pasajero">
+	<div class="panel panel-success">
+		<div class="panel-heading">!Estas lsito para viajar!</div>
+		<div class="panel-body" style="text-align: center;">
+			<h:outputText
+				value="Código de confirmación: #{reservaControlador.reserva.numeroRs}"
+				style=" font-size: 30px; color: green;" />
+		</div>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">Viajeros</div>
+		<div class="panel-body" style="text-align: center;">
+			<p:dataTable value="#{reservaControlador.listaPasajeros}"
+				var="pasajero" style="text-align: center">
 				<p:column headerText="Nombre">
 					<h:outputText value="#{pasajero.nombrePs} #{pasajero.apellidoPs}" />
 				</p:column>
@@ -21,10 +28,15 @@
 					<h:outputText value="#{pasajero.correoPs}" />
 				</p:column>
 			</p:dataTable>
-		</p:panel>
-		<div class="nk-gap"></div>
-		<p:panel header="Tus vuelos" style="border-style : hidden !important;">
-			<p:dataTable value="#{reservaControlador.reserva.productoIdaRs.productoVueloList}" var="productoVuelo" style="text-align: center">
+		</div>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">Tus vuelos</div>
+		<div class="panel-body" style="text-align: center;">
+			<p:dataTable
+				value="#{reservaControlador.reserva.productoIdaRs.productoVueloList}"
+				var="productoVuelo" style="text-align: center">
 				<p:column headerText="Fecha">
 					<h:outputText value="#{productoVuelo.vuelo.fechaVu}" />
 				</p:column>
@@ -38,12 +50,15 @@
 					<h:outputText value="#{productoVuelo.vuelo.numeroVu}" />
 				</p:column>
 				<p:column headerText="Cabina">
-					<h:outputText value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
+					<h:outputText
+						value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
 				</p:column>
 			</p:dataTable>
-			<div class="nk-gap"></div>	
-			<p:dataTable value="#{reservaControlador.reserva.productoRetornoRs.productoVueloList}" var="productoVuelo" style="text-align: center"
-			rendered="#{reservaControlador.reserva.productoRetornoRs.productoVueloList != null}">
+			<div class="nk-gap"></div>
+			<p:dataTable
+				value="#{reservaControlador.reserva.productoRetornoRs.productoVueloList}"
+				var="productoVuelo" style="text-align: center"
+				rendered="#{reservaControlador.reserva.productoRetornoRs.productoVueloList != null}">
 				<p:column headerText="Fecha">
 					<h:outputText value="#{productoVuelo.vuelo.fechaVu}" />
 				</p:column>
@@ -57,35 +72,49 @@
 					<h:outputText value="#{productoVuelo.vuelo.numeroVu}" />
 				</p:column>
 				<p:column headerText="Cabina">
-					<h:outputText value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
+					<h:outputText
+						value="#{reservaControlador.reserva.tipoCabina.nombreTc}" />
 				</p:column>
 			</p:dataTable>
-		</p:panel>
-		<div class="nk-gap"></div>
-		<p:panel header="Desglose de la tarifa" style="border-style : hidden !important;">
-			<p:dataTable value="#{reservaControlador.pasajerosCosto}" var="pasajeroCosto" style="text-align: center" sortBy="#{pasajeroCosto.reserva.costoTotalRs}">
-				<p:column	headerText="Pasjero">
-					<h:outputText value="Pasajero #{pasajeroCosto.pasajero.tipoPasajero.nombreTp} n° #{pasajeroCosto.pasajero.numeroPasajero}"  />
+		</div>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">Desglose de la tarifa</div>
+		<div class="panel-body" style="text-align: center;">
+			<p:dataTable value="#{reservaControlador.pasajerosCosto}"
+				var="pasajeroCosto" style="text-align: center"
+				sortBy="#{pasajeroCosto.reserva.costoTotalRs}">
+				<p:column headerText="Pasjero">
+					<h:outputText
+						value="Pasajero #{pasajeroCosto.pasajero.tipoPasajero.nombreTp} n° #{pasajeroCosto.pasajero.numeroPasajero}" />
 				</p:column>
-				<p:column	headerText="Tarifa">
-					<h:outputText value="#{pasajeroCosto.tarifaPc}"  />
+				<p:column headerText="Tarifa">
+					<h:outputText value="#{pasajeroCosto.tarifaPc}" />
 				</p:column>
-				<p:column	headerText="Impuestos">
-					<h:outputText value="#{pasajeroCosto.impuestoPc}"  />
+				<p:column headerText="Impuestos">
+					<h:outputText value="#{pasajeroCosto.impuestoPc}" />
 				</p:column>
-				<p:column	headerText="Total (USD)">
-					<h:outputText value="#{pasajeroCosto.impuestoPc + pasajeroCosto.tarifaPc}"  />
+				<p:column headerText="Total (USD)">
+					<h:outputText
+						value="#{pasajeroCosto.impuestoPc + pasajeroCosto.tarifaPc}" />
 				</p:column>
 				<p:summaryRow>
-					 <p:column colspan="3" style="text-align:right">
-		                <h:outputText value="Total Cobrado:" />
-		            </p:column>
-		            <p:column>
-		                <h:outputText value="#{reservaControlador.reserva.costoTotalRs}">
-		                    <f:convertNumber type="currency" currencySymbol="$" />
-		                </h:outputText>
-		            </p:column>
+					<p:column colspan="3" style="text-align:right; font-weight: bold;">
+						<h:outputText value="Total Cobrado:" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{reservaControlador.reserva.costoTotalRs}" style="font-weight: bold;">
+							<f:convertNumber type="currency" currencySymbol="$" />
+						</h:outputText>
+					</p:column>
 				</p:summaryRow>
 			</p:dataTable>
-		</p:panel>
+		</div>
+	</div>
+	
+	<p:commandButton styleClass="btn btn-default btn-sm"
+		style="float:right;" process="@this" 
+		value="Imprimir" action="#{reporteControlador.generarReporteReserva(reservaControlador.reserva)}"/>
+	
 </ui:composition>

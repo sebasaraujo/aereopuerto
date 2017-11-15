@@ -3,15 +3,17 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	template="/plantillas/contenedor.xhtml">
+	template="/plantillas/contenedor_interno.xhtml">
 
 	<ui:define name="titulo">
         AEREOLINEA
     </ui:define>
 	<ui:define name="contenido">
 		<h:form id="formReserva">
-			<p:growl id="growl" showDetail="true" autoUpdate="true"/>  
-			<p:tabView id="tabViewId" cache="false" activeIndex="#{reservaControlador.index}">
+<!-- 			<p:growl id="growl" showDetail="true" autoUpdate="true"/>   -->
+			<p:messages globalOnly="true" showDetail="true" autoUpdate="true"
+					closable="true" />
+			<p:tabView id="tabViewId" cache="false" activeIndex="#{reservaControlador.index}" style="text-align:left;" styleClass="nav nav-tabs">
 				<p:tab id="reservaId" title="Reserva" disabled="#{!reservaControlador.tabReserva}">
 					<ui:include src="/paginas/busquedaTab.xhtml" />
 					
