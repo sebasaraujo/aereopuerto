@@ -7,9 +7,13 @@ package ec.com.aereopuerto.facade;
 
 import ec.com.aereopuerto.facade.local.ProductoVueloFacadeLocal;
 import ec.com.aereopuerto.modelo.ProductoVuelo;
+
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,6 +32,16 @@ public class ProductoVueloFacade extends AbstractFacade<ProductoVuelo> implement
 
     public ProductoVueloFacade() {
         super(ProductoVuelo.class);
+    }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public List<ProductoVuelo> obtenerProductoVueloXProducto(Integer producto)
+    {
+    	Query q = em.createQuery("Select pv from ProductoVuelo pv left join fetch pv.vuelo v where pv.producto.codigoPo = :producto");
+    	q.setParameter("producto", producto);
+    	return q.getResultList();
+    	
     }
     
 }

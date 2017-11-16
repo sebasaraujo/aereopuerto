@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reserva" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e335dfb0-fe3b-4d41-acde-6fc88652bbe7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="Pasajeros" uuid="b8db8f00-8f21-4efd-832e-1bf336af8ccd">
+		<field name="apellidoPs" class="java.lang.String"/>
+		<field name="identifiacionPs" class="java.lang.String"/>
+		<field name="correoPs" class="java.lang.String"/>
+		<field name="nombrePs" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="CodigoReserva" class="java.lang.String"/>
+	<parameter name="reserva" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pasajeros" class="java.util.List"/>
+	<parameter name="productoIda" class="java.util.List"/>
+	<parameter name="productoRegreso" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" forecolor="#3C763D" backcolor="#D6E9C6" uuid="9f03be03-8a84-48b7-800e-f5c5b9eac2f4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[     ESTAS LISTO PARA VIAJAR!]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="34" width="555" height="20" forecolor="#3C763D" uuid="20ee9139-7605-46c7-90d1-923b9bb6a0eb"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Codigo de Confirmacion: "+$P{CodigoReserva}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement x="389" y="36" width="100" height="20" uuid="a1096f39-adfa-4879-93ea-d916ab2becb3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="36" width="100" height="20" uuid="976970b9-91e9-4f13-a558-fc18d8170e3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Identificacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="36" width="118" height="20" uuid="05fab468-b818-4d2b-9e89-f3d0af737cae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="0" y="60" width="555" height="24" uuid="c7ca947a-d191-4c37-b354-6d66085be8bd"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Pasajeros" uuid="2b6c6412-0973-467d-b0ee-136a8d7c84b9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{pasajeros})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="24" width="555">
+						<textField>
+							<reportElement x="14" y="0" width="178" height="20" uuid="a07aefbb-f39c-4230-b521-6bce9eafdd7f"/>
+							<textElement textAlignment="Center">
+								<font isBold="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{apellidoPs}+" "+$F{nombrePs}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="224" y="0" width="100" height="20" uuid="87b9c41c-7b6a-403d-a6e8-73f4728e7c7c"/>
+							<textElement textAlignment="Center"/>
+							<textFieldExpression><![CDATA[$F{identifiacionPs}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="369" y="0" width="146" height="20" uuid="45093ab8-3efd-4c44-9194-717a5133138e"/>
+							<textElement textAlignment="Center"/>
+							<textFieldExpression><![CDATA[$F{correoPs}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="36" backcolor="#BCE8F1" uuid="8672b102-9b64-4053-a13e-8a8d2a7b9803"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="16" y="0" width="100" height="36" forecolor="#31708F" uuid="a4dc99ad-36e6-4408-b30e-77838eae40da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[VIAJEROS]]></text>
+			</staticText>
+		</band>
+		<band height="151">
+			<subreport>
+				<reportElement x="0" y="35" width="555" height="100" uuid="13e3d212-a41d-4f61-b3c2-64cde4d8e752">
+					<printWhenExpression><![CDATA[true]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="productoIda">
+					<subreportParameterExpression><![CDATA[$P{productoIda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vuelos.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="35" forecolor="#31708F" backcolor="#BCE8F1" uuid="df577d42-fd03-42b6-89b5-66b400a3b041"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[                VUELOS]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

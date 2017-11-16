@@ -29,5 +29,12 @@ public interface ProductoVueloFacadeLocal {
     List<ProductoVuelo> findRange(int[] range);
 
     int count();
+
+    /**
+     * Metodo que obtiene productoVuelo por producto
+     * @param producto
+     * @return
+     */
+	List<ProductoVuelo> obtenerProductoVueloXProducto(Integer producto);
     
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vuelos" language="groovy" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="eb7e2a02-7be9-4014-a2c3-dfe70cdf8071">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="vuelosIda" uuid="bf173465-2e51-491d-a7e7-8f3f3072c2ad">
+		<field name="vuelo" class="java.lang.Object"/>
+	</subDataset>
+	<parameter name="productoIda" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="26" y="3" width="100" height="20" uuid="978f1949-92c5-4ea6-b5b5-332d51a150c1"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="166" y="2" width="100" height="20" uuid="4bb16bd7-48e7-436e-bd2a-cea1e15ed884"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="4" width="100" height="20" uuid="471e0056-220b-4109-a88e-cb9932addaf3"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Llegada]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="24">
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="23" uuid="76f92a56-bc27-45c5-89b8-718d71eefd21"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="vuelosIda" uuid="4f4e91f6-0459-42d1-9155-bd8c6b7dd7a1">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{productoIda})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="23" width="555">
+						<textField pattern="EEEEE dd MMMMM yyyy">
+							<reportElement x="26" y="0" width="100" height="20" uuid="533c586f-71d3-46a4-9a2d-376083ca6b90"/>
+							<textElement textAlignment="Center"/>
+							<textFieldExpression><![CDATA[$F{vuelo}.getFechaVu()]]></textFieldExpression>
+						</textField>
+						<textField pattern="h.mm a">
+							<reportElement x="166" y="0" width="100" height="20" uuid="4f01c52f-a379-4c3a-a4ff-941d02b0c9ed"/>
+							<textElement textAlignment="Center"/>
+							<textFieldExpression><![CDATA[$F{vuelo}.getHoraSalidaVu()]]></textFieldExpression>
+						</textField>
+						<textField pattern="h.mm.ss a">
+							<reportElement x="319" y="0" width="100" height="20" uuid="b7966d28-c2e5-4064-90a9-30fa380a422e"/>
+							<textFieldExpression><![CDATA[$F{vuelo}.getHoraLlegadaVu()]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>
