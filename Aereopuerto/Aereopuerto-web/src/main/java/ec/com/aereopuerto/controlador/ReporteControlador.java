@@ -1,6 +1,7 @@
 package ec.com.aereopuerto.controlador;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import ec.com.aereopuerto.modelo.Pasajero;
+import ec.com.aereopuerto.modelo.PasajeroCosto;
 import ec.com.aereopuerto.modelo.ProductoVuelo;
 import ec.com.aereopuerto.modelo.Reserva;
 import ec.com.aereopuerto.modelo.Vuelo;
@@ -34,7 +36,7 @@ public class ReporteControlador extends BaseControlador implements Serializable{
 		
 	}
 	
-	public void generarReporteReserva(Reserva reserva, List<Pasajero> pasajeros)
+	public void generarReporteReserva(Reserva reserva, List<Pasajero> pasajeros, List<PasajeroCosto> pasajerosCosto)
 	{
 		try {
 //			JasperReport jasperReport = JasperCompileManager
@@ -45,19 +47,24 @@ public class ReporteControlador extends BaseControlador implements Serializable{
 		 
 		       System.out.println("producto :"+reserva.getProductoIdaRs());
 		       List<ProductoVuelo> productoVueloIda = productoVueloService.obtenerProductoVueloXProducto(reserva.getProductoIdaRs().getCodigoPo());
-		       for(ProductoVuelo pv : productoVueloIda)
+		       List<ProductoVuelo> productoVueloRegreso = new ArrayList<>();
+		       if(reserva.getProductoRetornoRs() != null && reserva.getProductoRetornoRs().getCodigoPo() != null)
 		       {
-		    	   System.out.println("vuelo: "+pv.getVuelo().getFechaVu());
+		    	   productoVueloRegreso = productoVueloService.obtenerProductoVueloXProducto(reserva.getProductoRetornoRs().getCodigoPo());
 		       }
-		       
+		       System.out.println("productoVueloRegreso: "+productoVueloRegreso);
 		       parameters.put("CodigoReserva", reserva.getNumeroRs());
 		       parameters.put("reserva", reserva);
 		       parameters.put("pasajeros", pasajeros);
 		       parameters.put("productoIda", productoVueloIda);
-		       parameters.put("productoRegreso", reserva.getProductoIdaRs());
+		       parameters.put("productoRegreso", productoVueloRegreso);
+		       parameters.put("pasajerosCosto",pasajerosCosto);
+		       parameters.put("totalCobrado", reserva.getCostoTotalRs());
 		       
 		       Map<String,Object> subReportes = new HashMap<String, Object>();
 		       subReportes.put("vuelos","vuelos");
+		       subReportes.put("vuelos_regreso","vuelos_regreso");
+		       subReportes.put("tarifa","tarifa");
 		       // DataSource
 		       // This is simple example, no database.
 		       // then using empty datasource.

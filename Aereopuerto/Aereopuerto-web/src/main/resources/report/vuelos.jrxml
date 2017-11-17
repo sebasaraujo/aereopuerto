@@ -4,9 +4,11 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="vuelosIda" uuid="bf173465-2e51-491d-a7e7-8f3f3072c2ad">
+		<parameter name="tipoCabina" class="java.lang.String"/>
 		<field name="vuelo" class="java.lang.Object"/>
 	</subDataset>
 	<parameter name="productoIda" class="java.util.List"/>
+	<parameter name="tipoCabina" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -20,18 +22,32 @@
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="166" y="2" width="100" height="20" uuid="4bb16bd7-48e7-436e-bd2a-cea1e15ed884"/>
+				<reportElement x="148" y="2" width="100" height="20" uuid="4bb16bd7-48e7-436e-bd2a-cea1e15ed884"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Salida]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="4" width="100" height="20" uuid="471e0056-220b-4109-a88e-cb9932addaf3"/>
+				<reportElement x="265" y="2" width="100" height="20" uuid="471e0056-220b-4109-a88e-cb9932addaf3"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Llegada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="3" width="77" height="20" uuid="94685b57-0cb0-4a1e-a925-141a9c067edb"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VUELO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="3" width="77" height="20" uuid="3619149d-4ea2-4d88-984a-2ce885f44c02"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CABINA]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -40,7 +56,10 @@
 			<componentElement>
 				<reportElement x="0" y="0" width="555" height="23" uuid="76f92a56-bc27-45c5-89b8-718d71eefd21"/>
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="vuelosIda" uuid="4f4e91f6-0459-42d1-9155-bd8c6b7dd7a1">
+					<datasetRun subDataset="vuelosIda" uuid="861c6168-6945-4291-ba83-dcc20bc24212">
+						<datasetParameter name="tipoCabina">
+							<datasetParameterExpression><![CDATA[$P{tipoCabina}]]></datasetParameterExpression>
+						</datasetParameter>
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{productoIda})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:listContents height="23" width="555">
@@ -50,13 +69,24 @@
 							<textFieldExpression><![CDATA[$F{vuelo}.getFechaVu()]]></textFieldExpression>
 						</textField>
 						<textField pattern="h.mm a">
-							<reportElement x="166" y="0" width="100" height="20" uuid="4f01c52f-a379-4c3a-a4ff-941d02b0c9ed"/>
+							<reportElement x="148" y="0" width="100" height="20" uuid="4f01c52f-a379-4c3a-a4ff-941d02b0c9ed"/>
 							<textElement textAlignment="Center"/>
 							<textFieldExpression><![CDATA[$F{vuelo}.getHoraSalidaVu()]]></textFieldExpression>
 						</textField>
 						<textField pattern="h.mm.ss a">
-							<reportElement x="319" y="0" width="100" height="20" uuid="b7966d28-c2e5-4064-90a9-30fa380a422e"/>
+							<reportElement x="265" y="0" width="100" height="20" uuid="b7966d28-c2e5-4064-90a9-30fa380a422e"/>
+							<textElement textAlignment="Center"/>
 							<textFieldExpression><![CDATA[$F{vuelo}.getHoraLlegadaVu()]]></textFieldExpression>
+						</textField>
+						<textField pattern="h.mm.ss a">
+							<reportElement x="381" y="0" width="77" height="20" uuid="04d1c341-e8b9-4bcd-b77c-f60dce290094"/>
+							<textElement textAlignment="Center"/>
+							<textFieldExpression><![CDATA[$F{vuelo}.getNumeroVu()]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="473" y="0" width="77" height="20" uuid="afdd2f51-d454-4f13-ac29-bf3e9ee41b14"/>
+							<textElement textAlignment="Center" verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$P{tipoCabina}]]></textFieldExpression>
 						</textField>
 					</jr:listContents>
 				</jr:list>

@@ -115,6 +115,6 @@
 	
 	<p:commandLink styleClass="btn btn-default btn-sm" oncomplete="window.open('#{request.contextPath}/report?reporte=reserva','Reserva','height=' + window.screen.availHeight + ',width=' + window.screen.availWidth + ',toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes')"
 		style="float:right;" process="@this" 
-		value="Imprimir" action="#{reporteControlador.generarReporteReserva(reservaControlador.reserva,reservaControlador.listaPasajeros)}"/>
+		value="Imprimir" action="#{reporteControlador.generarReporteReserva(reservaControlador.reserva,reservaControlador.listaPasajeros,reservaControlador.pasajerosCosto)}"/>
 	
 </ui:composition>

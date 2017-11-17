@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tarifa" language="groovy" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c19f1901-a31e-48f8-a9c6-41356ba01f0e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="tarifa" uuid="f68c081e-9e17-4a1d-9029-5d43f1f10644">
+		<field name="pasajero" class="java.lang.Object"/>
+		<field name="tarifaPc" class="java.lang.Double"/>
+		<field name="impuestoPc" class="java.lang.Double"/>
+		<variable name="total" class="java.lang.String">
+			<variableExpression><![CDATA[$F{tarifaPc} + $F{impuestoPc}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="pasajerosCosto" class="java.util.List"/>
+	<parameter name="totalCobrado" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="50">
+			<staticText>
+				<reportElement x="288" y="13" width="100" height="20" uuid="76c52c35-ae97-4c72-93aa-99ddd9acdd5a"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Impuestos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="13" width="100" height="20" uuid="a21453c0-e483-4b59-8c5d-7724de226ea0"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tarifa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="14" width="141" height="20" uuid="ec51bcf3-4523-4e14-9084-22efab4ce66d"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pasajero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="14" width="77" height="20" uuid="a77b5fa5-c4ab-45f3-8220-fea3ceb785a9"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total (USD)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="20">
+			<staticText>
+				<reportElement positionType="Float" x="288" y="0" width="100" height="20" uuid="bfc3da2f-6a14-419b-a89f-a296dfe19311"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cobrado]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="404" y="0" width="77" height="20" uuid="8a2c06f4-0bc1-432d-abff-feeffdb7fdf3"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalCobrado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="23" splitType="Stretch">
+			<componentElement>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="555" height="23" uuid="e470b54b-a0e3-451a-b4a7-4826bf9af89f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" ignoreWidth="true">
+					<datasetRun subDataset="tarifa" uuid="e758f4db-3777-4da0-89c2-bb03a6bdb12b">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{pasajerosCosto})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="23" width="555">
+						<textField>
+							<reportElement x="10" y="0" width="138" height="20" uuid="ef633b7d-0336-498a-b0b6-d0c0b8d9b90f"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA["Pasajero "+$F{pasajero}.getTipoPasajero().getNombreTp()+" n°"+$V{COLUMN_NUMBER}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="171" y="0" width="100" height="20" uuid="a97d1fc0-ebff-4331-bcd8-7dca9bb012c2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{tarifaPc}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="288" y="0" width="100" height="20" uuid="c39aac8a-f548-4957-87d4-8999fd96fc4f"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{impuestoPc}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="404" y="0" width="77" height="20" uuid="2cc05459-d574-4bc5-bfd2-9fd63db48ef6"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

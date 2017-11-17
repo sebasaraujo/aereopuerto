@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reserva" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e335dfb0-fe3b-4d41-acde-6fc88652bbe7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="257"/>
 	<subDataset name="Pasajeros" uuid="b8db8f00-8f21-4efd-832e-1bf336af8ccd">
 		<field name="apellidoPs" class="java.lang.String"/>
 		<field name="identifiacionPs" class="java.lang.String"/>
@@ -16,7 +16,9 @@
 	</parameter>
 	<parameter name="pasajeros" class="java.util.List"/>
 	<parameter name="productoIda" class="java.util.List"/>
-	<parameter name="productoRegreso" class="java.lang.Object"/>
+	<parameter name="productoRegreso" class="java.util.List"/>
+	<parameter name="pasajerosCosto" class="java.util.List"/>
+	<parameter name="totalCobrado" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -100,13 +102,16 @@
 				<text><![CDATA[VIAJEROS]]></text>
 			</staticText>
 		</band>
-		<band height="151">
+		<band height="135">
 			<subreport>
 				<reportElement x="0" y="35" width="555" height="100" uuid="13e3d212-a41d-4f61-b3c2-64cde4d8e752">
 					<printWhenExpression><![CDATA[true]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="productoIda">
 					<subreportParameterExpression><![CDATA[$P{productoIda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tipoCabina">
+					<subreportParameterExpression><![CDATA[$P{reserva}.getTipoCabina().getNombreTc()]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vuelos.jasper"]]></subreportExpression>
@@ -117,14 +122,53 @@
 				<text><![CDATA[                VUELOS]]></text>
 			</staticText>
 		</band>
+		<band height="100">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="100" uuid="dd3efe70-6469-4482-895a-c1dc8df317a7"/>
+				<subreportParameter name="productoRegreso">
+					<subreportParameterExpression><![CDATA[$P{productoRegreso}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tipoCabina">
+					<subreportParameterExpression><![CDATA[$P{reserva}.getTipoCabina().getNombreTc()]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vuelos_regreso.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="110">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="35" forecolor="#31708F" backcolor="#BCE8F1" uuid="efad7b60-a986-437b-91ae-95095e438cd7"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[                DESGLOSE DE LA TARIFA]]></text>
+			</staticText>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="35" width="555" height="75" uuid="7bac4507-fbb6-4c6e-854d-78c6bacee1ec"/>
+				<subreportParameter name="totalCobrado">
+					<subreportParameterExpression><![CDATA[$P{totalCobrado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pasajerosCosto">
+					<subreportParameterExpression><![CDATA[$P{pasajerosCosto}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "tarifa.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="54" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="54" backcolor="#BCE8F1" uuid="10ac7d1b-3629-4b36-93ce-6c485ec8793b"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="21" width="555" height="20" forecolor="#FFFFFF" uuid="f4eb0835-cf88-40ac-97e8-ec61f162cfec"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monky-Solution. All rights reserved.]]></text>
+			</staticText>
+		</band>
 	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
